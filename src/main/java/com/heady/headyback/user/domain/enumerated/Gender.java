@@ -1,4 +1,4 @@
-package com.heady.headyback.user.domain;
+package com.heady.headyback.user.domain.enumerated;
 
 import java.util.Arrays;
 

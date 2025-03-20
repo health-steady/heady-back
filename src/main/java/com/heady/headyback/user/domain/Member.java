@@ -8,6 +8,10 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import com.heady.headyback.user.domain.enumerated.Gender;
+import com.heady.headyback.user.domain.enumerated.Role;
+import com.heady.headyback.user.domain.enumerated.Status;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
