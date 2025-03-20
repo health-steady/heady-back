@@ -19,6 +19,5 @@ public enum Gender {
 				.filter(g -> g.getTitle().equals(gender))
 				.findFirst()
 				.orElse(Gender.PRIVATE);
-		// TODO : 없을 때 예외처리
 	}
 }

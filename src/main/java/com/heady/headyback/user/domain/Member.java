@@ -32,7 +32,7 @@ public class Member {
 
 	@NotNull
 	@Column(unique = true)
-	private String email;
+	private Email email;
 
 	@NotNull
 	private String password;
@@ -78,7 +78,7 @@ public class Member {
 			String phone
 	) {
 		Member member = new Member();
-		member.email = email;
+		member.email = Email.ofCreate(email);
 		member.password = password;
 		member.name = name;
 		member.birthdate = toLocalDate(birthdate);
