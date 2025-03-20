@@ -69,6 +69,8 @@ public class Member {
 	@Enumerated(value = EnumType.STRING)
 	private Role role = Role.MEMBER;
 
+	private boolean isDeleted = false;
+
 	public static Member ofRegister(
 			String email,
 			String password,

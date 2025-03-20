@@ -6,14 +6,18 @@ import java.util.regex.Pattern;
 
 import com.heady.headyback.common.exception.CustomException;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
+import lombok.Getter;
 
 @Embeddable
+@Getter
 public class Email {
 
 	private static final Pattern EMAIL_PATTERN =
 			Pattern.compile("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$");
 
+	@Column(unique = true)
 	private String email;
 
 	public static Email ofCreate(String email) {
