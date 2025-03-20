@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.heady.headyback.user.dto.request.RegisterRequest;
 import com.heady.headyback.user.service.MemberDomainService;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -22,7 +23,7 @@ public class MemberController {
 
 	@PostMapping
 	public ResponseEntity<Void> register(
-			@RequestBody RegisterRequest request
+			@RequestBody @Valid RegisterRequest request
 	) {
 
 		return ResponseEntity.created(
