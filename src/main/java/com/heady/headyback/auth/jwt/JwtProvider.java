@@ -1,4 +1,4 @@
-package com.heady.headyback.auth.util.jwt;
+package com.heady.headyback.auth.jwt;
 
 import java.util.Date;
 
