@@ -1,4 +1,4 @@
-package com.heady.headyback.auth.util;
+package com.heady.headyback.auth.util.jwt;
 
 import javax.crypto.SecretKey;
 

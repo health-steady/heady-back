@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 
 import com.heady.headyback.auth.dto.AuthTokenDto;
 import com.heady.headyback.auth.dto.request.LoginRequest;
-import com.heady.headyback.auth.util.JwtProvider;
+import com.heady.headyback.auth.util.jwt.JwtProvider;
 import com.heady.headyback.common.exception.CustomException;
 import com.heady.headyback.user.domain.Email;
 import com.heady.headyback.user.domain.Member;
