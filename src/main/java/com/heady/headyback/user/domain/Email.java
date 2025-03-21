@@ -17,13 +17,13 @@ public class Email {
 	private static final Pattern EMAIL_PATTERN =
 			Pattern.compile("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$");
 
-	@Column(unique = true)
-	private String email;
+	@Column(name = "email", unique = true)
+	private String value;
 
 	public static Email ofCreate(String email) {
 		validateEmailPattern(email);
 		Email newEmail = new Email();
-		newEmail.email = email;
+		newEmail.value = email;
 		return newEmail;
 	}
 
