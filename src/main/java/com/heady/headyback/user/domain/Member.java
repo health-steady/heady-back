@@ -39,7 +39,7 @@ public class Member {
 	private Email email;
 
 	@NotNull
-	private String password;
+	private Password password;
 
 	@NotNull
 	private String name;
@@ -85,7 +85,7 @@ public class Member {
 	) {
 		Member member = new Member();
 		member.email = Email.ofCreate(email);
-		member.password = password;
+		member.password = Password.ofCreate(password);
 		member.name = name;
 		member.birthdate = toLocalDate(birthdate);
 		member.gender = Gender.toGenderEnum(gender);
