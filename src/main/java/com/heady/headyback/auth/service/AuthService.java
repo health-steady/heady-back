@@ -3,7 +3,9 @@ package com.heady.headyback.auth.service;
 import static com.heady.headyback.user.exception.MemberExceptionCode.*;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.heady.headyback.auth.domain.Accessor;
 import com.heady.headyback.auth.dto.AuthTokenDto;
 import com.heady.headyback.auth.dto.request.LoginRequest;
 import com.heady.headyback.auth.jwt.JwtProvider;
@@ -26,6 +28,13 @@ public class AuthService {
 				.orElseThrow(() -> new CustomException(MEMBER_NOT_FOUND));
 		checkPassword(member, request.password());
 		return createAuthToken(member);
+	}
+
+	@Transactional(readOnly = true)
+	public Accessor getAuthMember(Long memberId) {
+		Member member = memberRepository.findById(memberId)
+				.orElseThrow(() -> new CustomException(MEMBER_NOT_FOUND));
+		return Accessor.member(member.getId());
 	}
 
 	private void checkPassword(Member member, String rowPassword) {
