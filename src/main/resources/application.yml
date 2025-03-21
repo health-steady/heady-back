@@ -1,3 +1,8 @@
 spring:
   profiles:
     active: local
+
+jwt:
+  secret-key: ${JWT_SECRET_KEY}
+  accessToken-expiration-millis: 1800000
+  refreshToken-expiration-millis: 1209600000
