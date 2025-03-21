@@ -26,14 +26,12 @@ public class MemberController {
 	private final MemberDomainService memberDomainService;
 
 	@PostMapping
-	public ResponseEntity<Void> register(
-			@RequestBody @Valid RegisterRequest request
-	) {
-
-		return ResponseEntity.created(
-				URI.create("/api/members/v1/" + memberDomainService.register(request))
-		).build();
+	public ResponseEntity<Void> register(@RequestBody @Valid RegisterRequest request) {
+		Long memberId = memberDomainService.register(request);
+		URI location = URI.create("/api/members/v1/" + memberId);
+		return ResponseEntity.created(location).build();
 	}
+
 
 	@GetMapping("/me")
 	public ResponseEntity<?> me(@Auth Accessor accessor) {
