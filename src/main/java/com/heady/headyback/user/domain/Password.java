@@ -25,8 +25,14 @@ public class Password {
 	public static Password ofCreate(String value) {
 		validatePasswordPattern(value);
 		Password password = new Password();
-		password.value = encrypt(value);;
+		password.value = encrypt(value);
 		return password;
+	}
+
+	public void matches(String rawPassword) {
+		if (!passwordEncoder.matches(rawPassword, this.value)) {
+			throw new CustomException(PASSWORD_INVALID);
+		}
 	}
 
 	private static void validatePasswordPattern(String value) {
@@ -38,5 +44,4 @@ public class Password {
 	private static String encrypt(String rawPassword) {
 		return passwordEncoder.encode(rawPassword);
 	}
-
 }
