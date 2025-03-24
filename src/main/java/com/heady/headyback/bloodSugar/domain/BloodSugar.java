@@ -7,7 +7,6 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import com.heady.headyback.bloodSugar.domain.enumerated.MeasurementTimeType;
-import com.heady.headyback.meal.domain.Meal;
 import com.heady.headyback.user.domain.Member;
 
 import jakarta.persistence.Column;
