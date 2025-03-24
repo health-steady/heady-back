@@ -34,24 +34,23 @@ public class Member {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@NotNull
-	@Column(unique = true)
+	@Column(unique = true, nullable = false)
 	private Email email;
 
-	@NotNull
+	@Column(nullable = false)
 	private Password password;
 
-	@NotNull
+	@Column(nullable = false)
 	private String name;
 
 	// TODO : 랜덤으로 만들기
-	@NotNull
+	@Column(nullable = false)
 	private String nickname = "unknown";
 
-	@NotNull
+	@Column(nullable = false)
 	private LocalDate birthdate;
 
-	@NotNull
+	@Column(nullable = false)
 	@Enumerated(value = EnumType.STRING)
 	private Gender gender;
 
@@ -63,13 +62,13 @@ public class Member {
 	@LastModifiedDate
 	private LocalDateTime updatedAt;
 
-	@NotNull
+	@Column(nullable = false)
 	@Enumerated(value = EnumType.STRING)
 	private Status status = Status.ACTIVE;
 
 	private String profileImageUrl;
 
-	@NotNull
+	@Column(nullable = false)
 	@Enumerated(value = EnumType.STRING)
 	private Role role = Role.MEMBER;
 
