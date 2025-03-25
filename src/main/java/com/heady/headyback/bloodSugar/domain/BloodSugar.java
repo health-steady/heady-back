@@ -13,6 +13,8 @@ import com.heady.headyback.user.domain.Member;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -47,6 +49,7 @@ public class BloodSugar {
 	private LocalDateTime measuredAt;
 
 	@Column(nullable = false)
+	@Enumerated(EnumType.STRING)
 	private MeasurementTimeType measurementTimeType;
 
 	private String memo;
