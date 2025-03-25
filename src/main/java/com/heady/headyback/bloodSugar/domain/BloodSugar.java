@@ -56,4 +56,23 @@ public class BloodSugar {
 
 	@LastModifiedDate
 	private LocalDateTime updatedAt;
+
+	public static BloodSugar ofRecord(
+			Member member,
+			Meal meal,
+			Integer level,
+			LocalDateTime measuredAt,
+			String measurementTimeType,
+			String memo
+	) {
+		BloodSugar bloodSugar = new BloodSugar();
+		bloodSugar.member = member;
+		bloodSugar.meal = meal;
+		bloodSugar.level = level;
+		bloodSugar.measuredAt = measuredAt;
+		bloodSugar.measurementTimeType =
+				MeasurementTimeType.getMappedMeasurementTimeType(measurementTimeType);
+		bloodSugar.memo = memo;
+		return bloodSugar;
+	}
 }
