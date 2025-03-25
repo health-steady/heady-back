@@ -1,4 +1,4 @@
-package com.heady.headyback.user.exception;
+package com.heady.headyback.member.exception;
 
 public class MemberErrorMessage {
 	public static final String EMAIL_NOT_BLANK = "이메일이 존재하지 않습니다.";

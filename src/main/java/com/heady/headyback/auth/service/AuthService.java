@@ -1,6 +1,6 @@
 package com.heady.headyback.auth.service;
 
-import static com.heady.headyback.user.exception.MemberExceptionCode.*;
+import static com.heady.headyback.member.exception.MemberExceptionCode.*;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,9 +10,9 @@ import com.heady.headyback.auth.dto.AuthTokenDto;
 import com.heady.headyback.auth.dto.request.LoginRequest;
 import com.heady.headyback.auth.jwt.JwtProvider;
 import com.heady.headyback.common.exception.CustomException;
-import com.heady.headyback.user.domain.Email;
-import com.heady.headyback.user.domain.Member;
-import com.heady.headyback.user.repository.MemberRepository;
+import com.heady.headyback.member.domain.Email;
+import com.heady.headyback.member.domain.Member;
+import com.heady.headyback.member.repository.MemberRepository;
 
 import lombok.RequiredArgsConstructor;
 

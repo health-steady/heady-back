@@ -1,4 +1,4 @@
-package com.heady.headyback.user.exception;
+package com.heady.headyback.member.exception;
 
 import org.springframework.http.HttpStatus;
 

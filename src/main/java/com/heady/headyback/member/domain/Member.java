@@ -1,4 +1,4 @@
-package com.heady.headyback.user.domain;
+package com.heady.headyback.member.domain;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -8,9 +8,9 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import com.heady.headyback.user.domain.enumerated.Gender;
-import com.heady.headyback.user.domain.enumerated.Role;
-import com.heady.headyback.user.domain.enumerated.Status;
+import com.heady.headyback.member.domain.enumerated.Gender;
+import com.heady.headyback.member.domain.enumerated.Role;
+import com.heady.headyback.member.domain.enumerated.Status;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

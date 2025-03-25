@@ -1,6 +1,6 @@
-package com.heady.headyback.user.dto.request;
+package com.heady.headyback.member.dto.request;
 
-import com.heady.headyback.user.exception.MemberErrorMessage;
+import com.heady.headyback.member.exception.MemberErrorMessage;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

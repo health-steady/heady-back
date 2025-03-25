@@ -4,7 +4,7 @@ import java.util.Date;
 
 import org.springframework.stereotype.Component;
 
-import com.heady.headyback.user.domain.Member;
+import com.heady.headyback.member.domain.Member;
 
 import io.jsonwebtoken.Jwts;
 import lombok.RequiredArgsConstructor;

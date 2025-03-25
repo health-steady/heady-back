@@ -1,6 +1,6 @@
 package com.heady.headyback.bloodSugar.service;
 
-import static com.heady.headyback.user.exception.MemberExceptionCode.*;
+import static com.heady.headyback.member.exception.MemberExceptionCode.*;
 
 import org.springframework.stereotype.Service;
 
@@ -10,9 +10,8 @@ import com.heady.headyback.bloodSugar.dto.BloodSugarDto;
 import com.heady.headyback.bloodSugar.dto.request.RecordRequest;
 import com.heady.headyback.bloodSugar.repository.BloodSugarRepository;
 import com.heady.headyback.common.exception.CustomException;
-import com.heady.headyback.meal.domain.Meal;
-import com.heady.headyback.user.domain.Member;
-import com.heady.headyback.user.repository.MemberRepository;
+import com.heady.headyback.member.domain.Member;
+import com.heady.headyback.member.repository.MemberRepository;
 
 import lombok.RequiredArgsConstructor;
 

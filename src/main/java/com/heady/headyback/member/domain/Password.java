@@ -1,6 +1,6 @@
-package com.heady.headyback.user.domain;
+package com.heady.headyback.member.domain;
 
-import static com.heady.headyback.user.exception.MemberExceptionCode.*;
+import static com.heady.headyback.member.exception.MemberExceptionCode.*;
 
 import java.util.regex.Pattern;
 

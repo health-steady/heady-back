@@ -1,6 +1,6 @@
 package com.heady.headyback.auth.dto.request;
 
-import static com.heady.headyback.user.exception.MemberErrorMessage.*;
+import static com.heady.headyback.member.exception.MemberErrorMessage.*;
 
 import jakarta.validation.constraints.NotBlank;
 

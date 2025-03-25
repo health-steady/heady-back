@@ -1,14 +1,14 @@
-package com.heady.headyback.user.service;
+package com.heady.headyback.member.service;
 
-import static com.heady.headyback.user.exception.MemberExceptionCode.*;
+import static com.heady.headyback.member.exception.MemberExceptionCode.*;
 
 import org.springframework.stereotype.Service;
 
 import com.heady.headyback.common.exception.CustomException;
-import com.heady.headyback.user.domain.Email;
-import com.heady.headyback.user.domain.Member;
-import com.heady.headyback.user.dto.request.RegisterRequest;
-import com.heady.headyback.user.repository.MemberRepository;
+import com.heady.headyback.member.domain.Email;
+import com.heady.headyback.member.domain.Member;
+import com.heady.headyback.member.dto.request.RegisterRequest;
+import com.heady.headyback.member.repository.MemberRepository;
 
 import lombok.RequiredArgsConstructor;
 

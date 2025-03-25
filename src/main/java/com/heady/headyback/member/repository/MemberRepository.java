@@ -1,4 +1,4 @@
-package com.heady.headyback.user.repository;
+package com.heady.headyback.member.repository;
 
 import java.util.Optional;
 
@@ -7,8 +7,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import com.heady.headyback.user.domain.Email;
-import com.heady.headyback.user.domain.Member;
+import com.heady.headyback.member.domain.Email;
+import com.heady.headyback.member.domain.Member;
 
 @Repository
 public interface MemberRepository extends JpaRepository<Member, Long> {
