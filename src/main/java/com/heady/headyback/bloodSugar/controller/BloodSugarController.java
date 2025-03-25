@@ -12,6 +12,7 @@ import com.heady.headyback.bloodSugar.dto.request.RecordRequest;
 import com.heady.headyback.bloodSugar.dto.response.RecordResponse;
 import com.heady.headyback.bloodSugar.service.BloodSugarService;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -24,7 +25,7 @@ public class BloodSugarController {
 	@PostMapping
 	public ResponseEntity<RecordResponse> record(
 			@Auth Accessor accessor,
-			@RequestBody RecordRequest request
+			@RequestBody @Valid RecordRequest request
 	) {
 
 		return ResponseEntity.ok().body(
