@@ -17,7 +17,7 @@ public interface MealRepository extends JpaRepository<Meal, Long> {
 	@Query("""
 			    SELECT m FROM Meal m
 			    WHERE m.member.id = :memberId
-			      AND DATE(m.dateTime) = DATE(:measuredAt)
+			      AND DATE(m.mealDateTime) = DATE(:measuredAt)
 			      AND m.mealType = :mealType
 			""")
 	Optional<Meal> findByMemberIdAndMealTypeAndMeasuredAt(

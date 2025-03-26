@@ -42,7 +42,7 @@ public class Meal {
 	private MealType mealType;
 
 	@Column(nullable = false)
-	private LocalDateTime dateTime;
+	private LocalDateTime mealDateTime;
 
 	private String memo;
 
@@ -51,4 +51,18 @@ public class Meal {
 
 	@LastModifiedDate
 	private LocalDateTime updatedAt;
+
+	public static Meal ofRecord(
+			Member member,
+			MealType mealType,
+			LocalDateTime mealDateTime,
+			String memo
+	) {
+		Meal meal = new Meal();
+		meal.member = member;
+		meal.mealType = mealType;
+		meal.mealDateTime = mealDateTime;
+		meal.memo = memo;
+		return meal;
+	}
 }
