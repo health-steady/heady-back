@@ -23,6 +23,6 @@ public interface MealRepository extends JpaRepository<Meal, Long> {
 	Optional<Meal> findByMemberIdAndMealTypeAndMeasuredAt(
 			@Param("memberId") Long memberId,
 			@Param("mealType") MealType mealType,
-			@Param("dateTime") LocalDateTime measuredAt
+			@Param("measuredAt") LocalDateTime measuredAt
 	);
 }
