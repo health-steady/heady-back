@@ -5,6 +5,7 @@ import static com.heady.headyback.member.exception.MemberExceptionCode.*;
 import java.time.LocalDateTime;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.heady.headyback.auth.domain.Accessor;
 import com.heady.headyback.bloodSugar.domain.BloodSugar;
@@ -29,6 +30,7 @@ public class BloodSugarService {
 	private final MemberRepository memberRepository;
 	private final MealRepository mealRepository;
 
+	@Transactional
 	public BloodSugarDto record(Accessor accessor, RecordRequest request) {
 		Member member = memberRepository.findById(accessor.getId())
 				.orElseThrow(() -> new CustomException(MEMBER_NOT_FOUND));

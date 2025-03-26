@@ -3,6 +3,7 @@ package com.heady.headyback.member.service;
 import static com.heady.headyback.member.exception.MemberExceptionCode.*;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.heady.headyback.common.exception.CustomException;
 import com.heady.headyback.member.domain.Email;
@@ -19,6 +20,7 @@ public class MemberDomainService {
 	private final MemberRepository memberRepository;
 
 	// TODO : 이메일 인증
+	@Transactional
 	public Long register(
 			RegisterRequest request
 	) {
