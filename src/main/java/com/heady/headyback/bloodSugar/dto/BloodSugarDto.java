@@ -3,13 +3,13 @@ package com.heady.headyback.bloodSugar.dto;
 import java.time.LocalDateTime;
 
 import com.heady.headyback.bloodSugar.domain.BloodSugar;
-import com.heady.headyback.bloodSugar.domain.enumerated.MeasurementTimeType;
+import com.heady.headyback.bloodSugar.domain.enumerated.MeasureType;
 
 public record BloodSugarDto(
 		Long id,
 		Integer level,
 		LocalDateTime measuredAt,
-		MeasurementTimeType measurementTimeType,
+		MeasureType measureType,
 		String memo
 ) {
 	public static BloodSugarDto of(BloodSugar bloodSugar) {
@@ -17,7 +17,7 @@ public record BloodSugarDto(
 				bloodSugar.getId(),
 				bloodSugar.getLevel(),
 				bloodSugar.getMeasuredAt(),
-				bloodSugar.getMeasurementTimeType(),
+				bloodSugar.getMeasureType(),
 				bloodSugar.getMemo()
 		);
 	}

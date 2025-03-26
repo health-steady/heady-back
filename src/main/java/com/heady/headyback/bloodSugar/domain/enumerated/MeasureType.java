@@ -2,13 +2,19 @@ package com.heady.headyback.bloodSugar.domain.enumerated;
 
 import java.util.Arrays;
 
-public enum MeasurementTimeType {
-	BEFORE_MEAL,
-	AFTER_MEAL,
-	BEDTIME,
-	RANDOM;
+public enum MeasureType {
+	BEFORE_MEAL(true),
+	AFTER_MEAL(true),
+	BEDTIME(false),
+	RANDOM(false);
 
-	public static MeasurementTimeType getMappedMeasurementTimeType(
+	private final boolean hasMeal;
+
+	MeasureType(boolean hasMeal) {
+		this.hasMeal = hasMeal;
+	}
+
+	public static MeasureType getMappedMeasureType(
 			final String measurementTimeType
 	) {
 		return Arrays.stream(values())
@@ -16,5 +22,9 @@ public enum MeasurementTimeType {
 				.findAny()
 				.orElseThrow(() -> new RuntimeException("없는 타입"));
 		//TODO : 예외처리
+	}
+
+	public boolean requiresMeal() {
+		return hasMeal;
 	}
 }

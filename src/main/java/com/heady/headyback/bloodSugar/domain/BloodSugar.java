@@ -6,8 +6,9 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import com.heady.headyback.bloodSugar.domain.enumerated.MeasurementTimeType;
+import com.heady.headyback.bloodSugar.domain.enumerated.MeasureType;
 import com.heady.headyback.meal.domain.Meal;
+import com.heady.headyback.meal.domain.enumerated.MealType;
 import com.heady.headyback.member.domain.Member;
 
 import jakarta.persistence.Column;
@@ -43,6 +44,10 @@ public class BloodSugar {
 	private Meal meal;
 
 	@Column(nullable = false)
+	@Enumerated(value = EnumType.STRING)
+	private MealType mealType;
+
+	@Column(nullable = false)
 	private Integer level;
 
 	@Column(nullable = false)
@@ -50,7 +55,7 @@ public class BloodSugar {
 
 	@Column(nullable = false)
 	@Enumerated(EnumType.STRING)
-	private MeasurementTimeType measurementTimeType;
+	private MeasureType measureType;
 
 	private String memo;
 
@@ -63,18 +68,19 @@ public class BloodSugar {
 	public static BloodSugar ofRecord(
 			Member member,
 			Meal meal,
+			MealType mealType,
 			Integer level,
 			LocalDateTime measuredAt,
-			String measurementTimeType,
+			MeasureType measureType,
 			String memo
 	) {
 		BloodSugar bloodSugar = new BloodSugar();
 		bloodSugar.member = member;
 		bloodSugar.meal = meal;
+		bloodSugar.mealType = mealType;
 		bloodSugar.level = level;
 		bloodSugar.measuredAt = measuredAt;
-		bloodSugar.measurementTimeType =
-				MeasurementTimeType.getMappedMeasurementTimeType(measurementTimeType);
+		bloodSugar.measureType = measureType;
 		bloodSugar.memo = memo;
 		return bloodSugar;
 	}

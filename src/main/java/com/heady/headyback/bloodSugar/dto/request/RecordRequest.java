@@ -26,11 +26,11 @@ public record RecordRequest(
 
 		@NotBlank(message = REQUIRED_MEASUREMENT_TYPE)
 		@Pattern(regexp = MEASUREMENT_TYPE, message = INVALID_MEASUREMENT_TYPE)
-		String measurementTimeType,
+		String measureType,
 
 		@NotBlank(message = REQUIRED_MEAL_TYPE)
-		@Pattern(regexp = MEAL_TIME_TYPE, message = INVALID_MEAL_TYPE)
-		String mealTimeType,
+		@Pattern(regexp = MEAL_TYPE, message = INVALID_MEAL_TYPE)
+		String mealType,
 
 		@NotNull(message = REQUIRED_LEVEL)
 		@Min(value = MIN_LEVEL_VALUE, message = MIN_LEVEL)
