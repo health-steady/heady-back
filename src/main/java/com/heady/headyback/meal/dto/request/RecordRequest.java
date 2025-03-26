@@ -17,6 +17,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 
 public record RecordRequest(
+
 		@NotBlank(message = REQUIRED_MEAL_TYPE)
 		@Pattern(regexp = MEAL_TYPE_REGEX, message = INVALID_MEAL_TYPE)
 		String mealType,
@@ -27,7 +28,7 @@ public record RecordRequest(
 		LocalDateTime mealDateTime,
 
 		@NotEmpty(message = REQUIRED_FOOD_LIST)
-		List<@NotBlank(message = REQUIRED_FOOD_NAME) String> name,
+		List<@NotBlank(message = REQUIRED_FOOD_NAME) String> foodNames,
 
 		String memo
 ) {

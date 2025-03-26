@@ -63,4 +63,26 @@ public class Food {
 
 	@LastModifiedDate
 	private LocalDateTime updatedAt;
+
+	static Food ofAdd(
+			Meal meal,
+			String name,
+			BigDecimal amount,
+			Unit unit,
+			BigDecimal carbohydrate,
+			BigDecimal protein,
+			BigDecimal fat,
+			Integer calories
+	) {
+		Food food = new Food();
+		food.meal = meal;
+		food.name = name;
+		food.amount = amount;
+		food.unit = unit;
+		food.carbohydrate = carbohydrate;
+		food.protein = protein;
+		food.fat = fat;
+		food.calories = calories;
+		return food;
+	}
 }

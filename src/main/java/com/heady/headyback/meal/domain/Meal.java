@@ -1,14 +1,19 @@
 package com.heady.headyback.meal.domain;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import com.heady.headyback.meal.domain.enumerated.MealType;
+import com.heady.headyback.meal.domain.enumerated.Unit;
 import com.heady.headyback.member.domain.Member;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
@@ -20,6 +25,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Getter;
 
@@ -52,10 +58,14 @@ public class Meal {
 	@LastModifiedDate
 	private LocalDateTime updatedAt;
 
+	@OneToMany(mappedBy = "meal", cascade = CascadeType.ALL)
+	private List<Food> foods = new ArrayList<>();
+
 	public static Meal ofRecord(
 			Member member,
 			MealType mealType,
 			LocalDateTime mealDateTime,
+			List<String> foodNames,
 			String memo
 	) {
 		Meal meal = new Meal();
@@ -63,6 +73,28 @@ public class Meal {
 		meal.mealType = mealType;
 		meal.mealDateTime = mealDateTime;
 		meal.memo = memo;
+		addFoods(meal, foodNames);
 		return meal;
+	}
+
+	private static void addFoods(Meal meal, List<String> foods) {
+		// TODO 식품영양성분 DB 활용
+		meal.foods = new ArrayList<>();
+		foods.forEach(
+				name -> {
+					meal.foods.add(
+							Food.ofAdd(
+									meal,
+									name,
+									new BigDecimal("190.00"),
+									Unit.MILLILITER,
+									new BigDecimal("8.0"),
+									new BigDecimal("7.0"),
+									new BigDecimal("5.0"),
+									200
+							)
+					);
+				}
+		);
 	}
 }
