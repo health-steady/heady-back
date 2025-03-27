@@ -84,4 +84,8 @@ public class BloodSugar {
 		bloodSugar.memo = memo;
 		return bloodSugar;
 	}
+
+	public void assignToMeal(Meal meal) {
+		this.meal = meal;
+	}
 }

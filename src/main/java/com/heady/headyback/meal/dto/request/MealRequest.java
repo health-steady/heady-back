@@ -16,7 +16,7 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 
-public record RecordRequest(
+public record MealRequest(
 
 		@NotBlank(message = REQUIRED_MEAL_TYPE)
 		@Pattern(regexp = MEAL_TYPE_REGEX, message = INVALID_MEAL_TYPE)

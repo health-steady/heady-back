@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.heady.headyback.bloodSugar.domain.BloodSugar;
+import com.heady.headyback.meal.domain.enumerated.MealType;
 
 @Repository
 public interface BloodSugarRepository extends JpaRepository<BloodSugar, Long> {
@@ -25,4 +26,18 @@ public interface BloodSugarRepository extends JpaRepository<BloodSugar, Long> {
 			@Param("start") LocalDateTime start,
 			@Param("end") LocalDateTime end
 	);
+
+	@Query("""
+			    SELECT bs FROM BloodSugar bs
+			    WHERE bs.member.id = :memberId
+			      AND bs.mealType = :mealType
+			      AND bs.measuredAt BETWEEN :start AND :end
+			""")
+	List<BloodSugar> findByMemberIdAndMealTypeAndMeasuredAtBetween(
+			@Param("memberId") Long memberId,
+			@Param("mealType") MealType mealType,
+			@Param("start") LocalDateTime start,
+			@Param("end") LocalDateTime end
+	);
+
 }

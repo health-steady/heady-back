@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.heady.headyback.auth.annotation.Auth;
 import com.heady.headyback.auth.domain.Accessor;
-import com.heady.headyback.meal.dto.request.RecordRequest;
+import com.heady.headyback.meal.dto.request.MealRequest;
 import com.heady.headyback.meal.dto.response.MealResponse;
 import com.heady.headyback.meal.service.MealService;
 
@@ -23,14 +23,14 @@ public class MealController {
 	private final MealService mealService;
 
 	@PostMapping
-	public ResponseEntity<MealResponse> record(
+	public ResponseEntity<MealResponse> createMeal(
 			@Auth Accessor accessor,
-			@RequestBody @Valid RecordRequest request
+			@RequestBody @Valid MealRequest request
 	) {
 
 		return ResponseEntity.ok().body(
 				MealResponse.of(
-						mealService.record(accessor, request)
+						mealService.save(accessor, request)
 				)
 		);
 	}

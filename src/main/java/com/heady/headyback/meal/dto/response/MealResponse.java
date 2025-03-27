@@ -28,4 +28,9 @@ public record MealResponse(
 						.collect(Collectors.toList())
 		);
 	}
+
+	public static MealResponse ofNullable(MealDto mealDto) {
+		if (mealDto == null) return null;
+		return of(mealDto);
+	}
 }

@@ -25,4 +25,9 @@ public record MealDto(
 						.collect(Collectors.toSet())
 		);
 	}
+
+	public static MealDto ofNullable(Meal meal) {
+		if (meal == null) return null;
+		return of(meal);
+	}
 }

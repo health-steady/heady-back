@@ -21,7 +21,7 @@ public record BloodSugarDto(
 				bloodSugar.getMeasuredAt(),
 				bloodSugar.getMeasureType(),
 				bloodSugar.getMemo(),
-				MealDto.of(bloodSugar.getMeal())
+				MealDto.ofNullable(bloodSugar.getMeal())
 		);
 	}
 }

@@ -21,7 +21,7 @@ public record BloodSugarResponse(
 				bloodSugarDto.measuredAt(),
 				bloodSugarDto.measureType(),
 				bloodSugarDto.memo(),
-				MealResponse.of(bloodSugarDto.mealDto())
+				MealResponse.ofNullable(bloodSugarDto.mealDto())
 		);
 	}
 }
