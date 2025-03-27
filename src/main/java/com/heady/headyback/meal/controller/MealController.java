@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.heady.headyback.auth.annotation.Auth;
 import com.heady.headyback.auth.domain.Accessor;
 import com.heady.headyback.meal.dto.request.RecordRequest;
-import com.heady.headyback.meal.dto.response.RecordResponse;
+import com.heady.headyback.meal.dto.response.MealResponse;
 import com.heady.headyback.meal.service.MealService;
 
 import jakarta.validation.Valid;
@@ -23,13 +23,13 @@ public class MealController {
 	private final MealService mealService;
 
 	@PostMapping
-	public ResponseEntity<RecordResponse> record(
+	public ResponseEntity<MealResponse> record(
 			@Auth Accessor accessor,
 			@RequestBody @Valid RecordRequest request
 	) {
 
 		return ResponseEntity.ok().body(
-				RecordResponse.of(
+				MealResponse.of(
 						mealService.record(accessor, request)
 				)
 		);

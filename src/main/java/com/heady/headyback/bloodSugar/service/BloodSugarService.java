@@ -2,7 +2,10 @@ package com.heady.headyback.bloodSugar.service;
 
 import static com.heady.headyback.member.exception.MemberExceptionCode.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,7 +14,7 @@ import com.heady.headyback.auth.domain.Accessor;
 import com.heady.headyback.bloodSugar.domain.BloodSugar;
 import com.heady.headyback.bloodSugar.domain.enumerated.MeasureType;
 import com.heady.headyback.bloodSugar.dto.BloodSugarDto;
-import com.heady.headyback.bloodSugar.dto.request.RecordRequest;
+import com.heady.headyback.bloodSugar.dto.request.BloodSugarRequest;
 import com.heady.headyback.bloodSugar.repository.BloodSugarRepository;
 import com.heady.headyback.common.exception.CustomException;
 import com.heady.headyback.meal.domain.Meal;
@@ -31,7 +34,7 @@ public class BloodSugarService {
 	private final MealRepository mealRepository;
 
 	@Transactional
-	public BloodSugarDto record(Accessor accessor, RecordRequest request) {
+	public BloodSugarDto record(Accessor accessor, BloodSugarRequest request) {
 		Member member = memberRepository.findById(accessor.getId())
 				.orElseThrow(() -> new CustomException(MEMBER_NOT_FOUND));
 
@@ -55,7 +58,21 @@ public class BloodSugarService {
 		);
 	}
 
-	public Meal getMeal(
+	@Transactional(readOnly = true)
+	public List<BloodSugarDto> getAllByDate(Accessor accessor, LocalDate date) {
+		Member member = memberRepository.findById(accessor.getId())
+				.orElseThrow(() -> new CustomException(MEMBER_NOT_FOUND));
+		return bloodSugarRepository.findAllByMemberIdAndMeasuredAtBetween(
+						member.getId(),
+						date.atStartOfDay(),
+						date.plusDays(1).atStartOfDay()
+				)
+				.stream()
+				.map(BloodSugarDto::of)
+				.collect(Collectors.toList());
+	}
+
+	private Meal getMeal(
 			Long memberId,
 			LocalDateTime measuredAt,
 			MeasureType measureType,

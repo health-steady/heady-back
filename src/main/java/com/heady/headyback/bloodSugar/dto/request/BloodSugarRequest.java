@@ -17,7 +17,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 
-public record RecordRequest(
+public record BloodSugarRequest(
 
 		@NotNull(message = REQUIRED_MEASURED_AT)
 		@JsonFormat(pattern = MEASURED_AT_PATTERN)
