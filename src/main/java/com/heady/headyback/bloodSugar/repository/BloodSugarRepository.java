@@ -13,10 +13,12 @@ import com.heady.headyback.bloodSugar.domain.BloodSugar;
 @Repository
 public interface BloodSugarRepository extends JpaRepository<BloodSugar, Long> {
 	@Query("""
-			    SELECT b FROM BloodSugar b
-			    WHERE b.member.id = :memberId
-			      AND b.measuredAt BETWEEN :start AND :end
-			    ORDER BY b.measuredAt
+			    SELECT bs FROM BloodSugar bs
+			    LEFT JOIN FETCH bs.meal m
+			    LEFT JOIN FETCH m.foods
+			    WHERE bs.member.id = :memberId
+			      AND bs.measuredAt BETWEEN :start AND :end
+			    ORDER BY bs.measuredAt
 			""")
 	List<BloodSugar> findAllByMemberIdAndMeasuredAtBetween(
 			@Param("memberId") Long memberId,
