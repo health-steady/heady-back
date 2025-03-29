@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 
 import com.heady.headyback.bloodSugar.domain.enumerated.MeasureType;
 import com.heady.headyback.bloodSugar.dto.BloodSugarDto;
+import com.heady.headyback.meal.domain.enumerated.MealType;
 import com.heady.headyback.meal.dto.response.MealResponse;
 
 public record BloodSugarResponse(
@@ -12,6 +13,7 @@ public record BloodSugarResponse(
 		LocalDateTime measuredAt,
 		MeasureType measureType,
 		String memo,
+		MealType mealType,
 		MealResponse meal
 ) {
 	public static BloodSugarResponse of(BloodSugarDto bloodSugarDto) {
@@ -21,6 +23,7 @@ public record BloodSugarResponse(
 				bloodSugarDto.measuredAt(),
 				bloodSugarDto.measureType(),
 				bloodSugarDto.memo(),
+				bloodSugarDto.mealType(),
 				MealResponse.ofNullable(bloodSugarDto.mealDto())
 		);
 	}

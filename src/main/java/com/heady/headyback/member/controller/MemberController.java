@@ -17,7 +17,9 @@ import com.heady.headyback.member.service.MemberDomainService;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/members/v1")
@@ -27,6 +29,7 @@ public class MemberController {
 
 	@PostMapping
 	public ResponseEntity<Void> register(@RequestBody @Valid RegisterRequest request) {
+		log.info("Login request received: {}", request);  // 추가
 		Long memberId = memberDomainService.register(request);
 		URI location = URI.create("/api/members/v1/" + memberId);
 		return ResponseEntity.created(location).build();
