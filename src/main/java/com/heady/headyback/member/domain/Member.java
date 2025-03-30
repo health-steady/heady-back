@@ -1,5 +1,6 @@
 package com.heady.headyback.member.domain;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -12,6 +13,7 @@ import com.heady.headyback.member.domain.enumerated.Gender;
 import com.heady.headyback.member.domain.enumerated.Role;
 import com.heady.headyback.member.domain.enumerated.Status;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
@@ -20,6 +22,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
 
@@ -32,6 +35,9 @@ public class Member {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+
+	@OneToOne(mappedBy = "member", cascade = CascadeType.ALL)
+	private Target target;
 
 	@Column(unique = true, nullable = false)
 	private Email email;
@@ -54,6 +60,12 @@ public class Member {
 	private Gender gender;
 
 	private String phone;
+
+	@Column(nullable = false, precision = 5, scale = 2)
+	private BigDecimal height;
+
+	@Column(nullable = false, precision = 5, scale = 2)
+	private BigDecimal weight;
 
 	@CreatedDate
 	private LocalDateTime createdAt;
@@ -88,7 +100,20 @@ public class Member {
 		member.birthdate = toLocalDate(birthdate);
 		member.gender = Gender.toGenderEnum(gender);
 		member.phone = phone;
+		member.assignAverageHeightAndWeight();
+		member.target = Target.ofCreate(member);
 		return member;
+	}
+
+	public boolean isMale() {
+		return gender == Gender.MALE;
+	}
+
+	private void assignAverageHeightAndWeight() {
+		int age = LocalDate.now().getYear() - this.birthdate.getYear();
+		AverageBodyInfo.Body body = AverageBodyInfo.getAverage(this.gender, age);
+		height = body.getHeight();
+		weight = body.getWeight();
 	}
 
 	private static LocalDate toLocalDate(String birthdate) {
