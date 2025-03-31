@@ -6,6 +6,7 @@ public enum MeasureType {
 	BEFORE_MEAL(true),
 	AFTER_MEAL(true),
 	BEDTIME(false),
+	FASTING(false),
 	RANDOM(false);
 
 	private final boolean hasMeal;

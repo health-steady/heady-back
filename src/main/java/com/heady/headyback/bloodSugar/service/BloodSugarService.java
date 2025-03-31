@@ -14,6 +14,7 @@ import com.heady.headyback.auth.domain.Accessor;
 import com.heady.headyback.bloodSugar.domain.BloodSugar;
 import com.heady.headyback.bloodSugar.domain.enumerated.MeasureType;
 import com.heady.headyback.bloodSugar.dto.BloodSugarDto;
+import com.heady.headyback.bloodSugar.dto.BloodSugarSummaryDto;
 import com.heady.headyback.bloodSugar.dto.request.BloodSugarRequest;
 import com.heady.headyback.bloodSugar.repository.BloodSugarRepository;
 import com.heady.headyback.common.exception.CustomException;
@@ -70,6 +71,17 @@ public class BloodSugarService {
 				.stream()
 				.map(BloodSugarDto::of)
 				.collect(Collectors.toList());
+	}
+
+	@Transactional(readOnly = true)
+	public BloodSugarSummaryDto getSummaryByDate(Accessor accessor, LocalDate date) {
+		Member member = memberRepository.findById(accessor.getId())
+				.orElseThrow(() -> new CustomException(MEMBER_NOT_FOUND));
+		return bloodSugarRepository.findSummaryByMemberIdAndMeasuredAtBetween(
+				member.getId(),
+				date.atStartOfDay(),
+				date.plusDays(1).atStartOfDay()
+		);
 	}
 
 	private Meal getMeal(

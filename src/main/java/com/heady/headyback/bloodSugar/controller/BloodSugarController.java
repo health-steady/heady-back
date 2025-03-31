@@ -55,4 +55,15 @@ public class BloodSugarController {
 						.collect(Collectors.toList())
 		);
 	}
+
+	@GetMapping("/summary")
+	public ResponseEntity<?> getSummaryByDate(
+			@Auth Accessor accessor,
+			@RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date
+	) {
+
+		return ResponseEntity.ok().body(
+				bloodSugarService.getSummaryByDate(accessor, date)
+		);
+	}
 }
