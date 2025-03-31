@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.heady.headyback.auth.annotation.Auth;
 import com.heady.headyback.auth.domain.Accessor;
 import com.heady.headyback.member.dto.request.RegisterRequest;
+import com.heady.headyback.member.dto.response.MemberResponse;
 import com.heady.headyback.member.service.MemberDomainService;
 
 import jakarta.validation.Valid;
@@ -35,12 +36,20 @@ public class MemberController {
 		return ResponseEntity.created(location).build();
 	}
 
+	@GetMapping
+	public ResponseEntity<MemberResponse> get(@Auth Accessor accessor) {
+		return ResponseEntity.ok(
+				MemberResponse.of(
+						memberDomainService.get(accessor)
+				)
+		);
+	}
 
 	@GetMapping("/me")
 	public ResponseEntity<?> me(@Auth Accessor accessor) {
 		return ResponseEntity.ok(Map.of(
 				"id", accessor.getId(),
-				"authority",accessor.getAuthority()
+				"authority", accessor.getAuthority()
 		));
 	}
 

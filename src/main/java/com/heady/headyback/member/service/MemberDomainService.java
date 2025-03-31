@@ -5,9 +5,11 @@ import static com.heady.headyback.member.exception.MemberExceptionCode.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.heady.headyback.auth.domain.Accessor;
 import com.heady.headyback.common.exception.CustomException;
 import com.heady.headyback.member.domain.Email;
 import com.heady.headyback.member.domain.Member;
+import com.heady.headyback.member.dto.MemberDto;
 import com.heady.headyback.member.dto.request.RegisterRequest;
 import com.heady.headyback.member.repository.MemberRepository;
 
@@ -21,9 +23,7 @@ public class MemberDomainService {
 
 	// TODO : 이메일 인증
 	@Transactional
-	public Long register(
-			RegisterRequest request
-	) {
+	public Long register(RegisterRequest request) {
 		Email email = Email.ofCreate(request.email());
 		checkDuplicationEmail(email);
 		return memberRepository.save(
@@ -36,6 +36,13 @@ public class MemberDomainService {
 						request.phone()
 				)
 		).getId();
+	}
+
+	@Transactional(readOnly = true)
+	public MemberDto get(Accessor accessor) {
+		return MemberDto.of(memberRepository.findById(accessor.getId())
+				.orElseThrow(() -> new CustomException(MEMBER_NOT_FOUND))
+		);
 	}
 
 	private void checkDuplicationEmail(Email email) {
