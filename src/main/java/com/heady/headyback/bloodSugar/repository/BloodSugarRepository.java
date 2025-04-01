@@ -42,26 +42,26 @@ public interface BloodSugarRepository extends JpaRepository<BloodSugar, Long> {
 	);
 
 	@Query(value = """
-			    SELECT 
-			        MAX(CASE 
-			                WHEN bs.measure_type = 'AFTER_MEAL' AND bs.meal_type = 'BREAKFAST' 
-			                THEN bs.level 
+			    SELECT
+			        MAX(CASE
+			                WHEN bs.measure_type = 'AFTER_MEAL' AND bs.meal_type = 'BREAKFAST'
+			                THEN bs.level
 			            END) AS breakfast,
-			        MAX(CASE 
-			                WHEN bs.measure_type = 'AFTER_MEAL' AND bs.meal_type = 'LUNCH' 
-			                THEN bs.level 
+			        MAX(CASE
+			                WHEN bs.measure_type = 'AFTER_MEAL' AND bs.meal_type = 'LUNCH'
+			                THEN bs.level
 			            END) AS lunch,
-			        MAX(CASE 
-			                WHEN bs.measure_type = 'AFTER_MEAL' AND bs.meal_type = 'DINNER' 
-			                THEN bs.level 
+			        MAX(CASE
+			                WHEN bs.measure_type = 'AFTER_MEAL' AND bs.meal_type = 'DINNER'
+			                THEN bs.level
 			            END) AS dinner,
-			        MAX(CASE 
-			                WHEN bs.measure_type = 'FASTING' 
-			                THEN bs.level 
+			        MAX(CASE
+			                WHEN bs.measure_type = 'FASTING'
+			                THEN bs.level
 			            END) AS highestFasting,
-			        MAX(CASE 
-			                WHEN bs.measure_type = 'AFTER_MEAL' 
-			                THEN bs.level 
+			        MAX(CASE
+			                WHEN bs.measure_type = 'AFTER_MEAL'
+			                THEN bs.level
 			            END) AS highestPostprandial
 			    FROM blood_sugar bs
 			    WHERE bs.member_id = :memberId

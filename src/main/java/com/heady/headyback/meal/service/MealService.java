@@ -2,17 +2,21 @@ package com.heady.headyback.meal.service;
 
 import static com.heady.headyback.member.exception.MemberExceptionCode.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.List;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.heady.headyback.auth.domain.Accessor;
+import com.heady.headyback.meal.dto.NutrientSummaryDto;
 import com.heady.headyback.bloodSugar.repository.BloodSugarRepository;
 import com.heady.headyback.common.exception.CustomException;
 import com.heady.headyback.meal.domain.Meal;
+import com.heady.headyback.meal.domain.Nutrient;
 import com.heady.headyback.meal.domain.enumerated.MealType;
 import com.heady.headyback.meal.dto.MealDto;
 import com.heady.headyback.meal.dto.request.MealRequest;
@@ -49,6 +53,21 @@ public class MealService {
 		return MealDto.of(mealRepository.save(meal));
 	}
 
+	public NutrientSummaryDto getNutrientSummary(Accessor accessor, LocalDate date) {
+		Member member = memberRepository.findById(accessor.getId())
+				.orElseThrow(() -> new CustomException(MEMBER_NOT_FOUND));
+
+		return NutrientSummaryDto.of(
+				summaryNutrient(
+						mealRepository.findByMemberIdAndMealDateTimeBetween(
+								member.getId(),
+								date.atStartOfDay(),
+								date.atTime(LocalTime.MAX)
+						)
+				)
+		);
+	}
+
 	private void assignMealToBloodSugars(Long memberId, Meal meal) {
 		LocalDate date = meal.getMealDateTime().toLocalDate();
 		LocalDateTime start = date.atStartOfDay();
@@ -63,5 +82,20 @@ public class MealService {
 				).stream()
 				.filter(bloodSugar -> bloodSugar.getMeal() == null)
 				.forEach(bloodSugar -> bloodSugar.assignToMeal(meal));
+	}
+
+	private Nutrient summaryNutrient(List<Meal> meals) {
+		BigDecimal totalCarb = BigDecimal.ZERO;
+		BigDecimal totalProtein = BigDecimal.ZERO;
+		BigDecimal totalFat = BigDecimal.ZERO;
+
+		for (Meal meal : meals) {
+			Nutrient n = meal.calculateTotalNutrient();
+			totalCarb = totalCarb.add(n.carbohydrate());
+			totalProtein = totalProtein.add(n.protein());
+			totalFat = totalFat.add(n.fat());
+		}
+
+		return Nutrient.of(totalCarb, totalProtein, totalFat);
 	}
 }

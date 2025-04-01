@@ -77,24 +77,40 @@ public class Meal {
 		return meal;
 	}
 
+	public Nutrient calculateTotalNutrient() {
+		BigDecimal carbohydrate = BigDecimal.ZERO;
+		BigDecimal protein = BigDecimal.ZERO;
+		BigDecimal fat = BigDecimal.ZERO;
+
+		for (Food food : foods) {
+			carbohydrate = carbohydrate.add(defaultIfNull(food.getCarbohydrate()));
+			protein = protein.add(defaultIfNull(food.getProtein()));
+			fat = fat.add(defaultIfNull(food.getFat()));
+		}
+
+		return Nutrient.of(carbohydrate, protein, fat);
+	}
+
 	private static void addFoods(Meal meal, List<String> foods) {
 		// TODO 식품영양성분 DB 활용
 		meal.foods = new ArrayList<>();
 		foods.forEach(
-				name -> {
-					meal.foods.add(
-							Food.ofAdd(
-									meal,
-									name,
-									new BigDecimal("190.00"),
-									Unit.MILLILITER,
-									new BigDecimal("8.0"),
-									new BigDecimal("7.0"),
-									new BigDecimal("5.0"),
-									200
-							)
-					);
-				}
+				name -> meal.foods.add(
+						Food.ofAdd(
+								meal,
+								name,
+								new BigDecimal("190.00"),
+								Unit.MILLILITER,
+								new BigDecimal("8.0"),
+								new BigDecimal("7.0"),
+								new BigDecimal("5.0"),
+								200
+						)
+				)
 		);
+	}
+
+	private BigDecimal defaultIfNull(BigDecimal value) {
+		return value != null ? value : BigDecimal.ZERO;
 	}
 }

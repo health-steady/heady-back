@@ -1,6 +1,7 @@
 package com.heady.headyback.meal.repository;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -24,5 +25,17 @@ public interface MealRepository extends JpaRepository<Meal, Long> {
 			@Param("memberId") Long memberId,
 			@Param("mealType") MealType mealType,
 			@Param("measuredAt") LocalDateTime measuredAt
+	);
+
+	@Query("""
+			    SELECT m FROM Meal m
+				LEFT JOIN FETCH m.foods
+			    WHERE m.member.id = :memberId
+			      AND m.mealDateTime BETWEEN :start AND :end
+			""")
+	List<Meal> findByMemberIdAndMealDateTimeBetween(
+			@Param("memberId") Long memberId,
+			@Param("start") LocalDateTime start,
+			@Param("end") LocalDateTime end
 	);
 }
