@@ -322,4 +322,6 @@ gradle-app.setting
 # Java heap dump
 *.hprof
 
+scripts/python-scripts/.venv/
+
 # End of https://www.toptal.com/developers/gitignore/api/java,intellij,intellij+all,windows,macos,gradle
