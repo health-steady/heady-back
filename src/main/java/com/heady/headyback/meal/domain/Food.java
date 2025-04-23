@@ -37,26 +37,35 @@ public class Food {
 	@JoinColumn(nullable = false)
 	private Meal meal;
 
+	/** API 원본 식품코드 */
+	@Column(nullable = false, length = 50)
+	private String code;
+
 	@Column(nullable = false)
 	private String name;
 
-	@Column(precision = 10, scale = 2, nullable = false)
-	private BigDecimal amount;
+	@Column(precision = 9, scale = 2)
+	private BigDecimal calories;
+	@Column(precision = 9, scale = 2)
+	private BigDecimal carbohydrates;
+	@Column(precision = 9, scale = 2)
+	private BigDecimal sugar;
+	@Column(precision = 9, scale = 2)
+	private BigDecimal fiber;
+	@Column(precision = 9, scale = 2)
+	private BigDecimal protein;
+	@Column(precision = 9, scale = 2)
+	private BigDecimal fat;
+	@Column(precision = 9, scale = 2)
+	private BigDecimal satFat;
+	@Column(precision = 9, scale = 2)
+	private BigDecimal transFat;
+	@Column(precision = 9, scale = 2)
+	private BigDecimal sodium;
 
 	@Column(nullable = false)
 	@Enumerated(EnumType.STRING)
 	private Unit unit;
-
-	@Column(precision = 10, scale = 2)
-	private BigDecimal carbohydrate;
-
-	@Column(precision = 10, scale = 2)
-	private BigDecimal protein;
-
-	@Column(precision = 10, scale = 2)
-	private BigDecimal fat;
-
-	private Integer calories;
 
 	@CreatedDate
 	private LocalDateTime createdAt;
@@ -66,23 +75,11 @@ public class Food {
 
 	static Food ofAdd(
 			Meal meal,
-			String name,
-			BigDecimal amount,
-			Unit unit,
-			BigDecimal carbohydrate,
-			BigDecimal protein,
-			BigDecimal fat,
-			Integer calories
+			String name
 	) {
 		Food food = new Food();
 		food.meal = meal;
 		food.name = name;
-		food.amount = amount;
-		food.unit = unit;
-		food.carbohydrate = carbohydrate;
-		food.protein = protein;
-		food.fat = fat;
-		food.calories = calories;
 		return food;
 	}
 }

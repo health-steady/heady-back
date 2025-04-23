@@ -10,7 +10,6 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import com.heady.headyback.meal.domain.enumerated.MealType;
-import com.heady.headyback.meal.domain.enumerated.Unit;
 import com.heady.headyback.member.domain.Member;
 
 import jakarta.persistence.CascadeType;
@@ -83,7 +82,7 @@ public class Meal {
 		BigDecimal fat = BigDecimal.ZERO;
 
 		for (Food food : foods) {
-			carbohydrate = carbohydrate.add(defaultIfNull(food.getCarbohydrate()));
+			carbohydrate = carbohydrate.add(defaultIfNull(food.getCarbohydrates()));
 			protein = protein.add(defaultIfNull(food.getProtein()));
 			fat = fat.add(defaultIfNull(food.getFat()));
 		}
@@ -98,13 +97,7 @@ public class Meal {
 				name -> meal.foods.add(
 						Food.ofAdd(
 								meal,
-								name,
-								new BigDecimal("190.00"),
-								Unit.MILLILITER,
-								new BigDecimal("8.0"),
-								new BigDecimal("7.0"),
-								new BigDecimal("5.0"),
-								200
+								name
 						)
 				)
 		);
