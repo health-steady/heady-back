@@ -6,3 +6,7 @@ jwt:
   secret-key: ${JWT_SECRET_KEY}
   accessToken-expiration-millis: 1800000
   refreshToken-expiration-millis: 1209600000
+food:
+  api:
+    base-url: ${FOOD_API_BASE_URL}
+    service-key: ${FOOD_API_SERVICE_KEY}
