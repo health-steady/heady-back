@@ -9,7 +9,7 @@ public record FoodSearchResponse(
 		String manufacturerName
 ) {
 	public static List<FoodSearchResponse> from(FoodApiResponse foodApiResponse) {
-		return foodApiResponse.body().items().stream()
+		return foodApiResponse.response().body().items().stream()
 				.map(foodItem -> new FoodSearchResponse(
 						foodItem.code(),
 						foodItem.name(),

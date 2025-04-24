@@ -6,24 +6,29 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public record FoodApiResponse(
+		@JsonProperty("response")
+		Response response
 
-		@JsonProperty("header")
-		Header header,
-
-		@JsonProperty("body")
-		Body body
 ) {
+	public record Response(
+			@JsonProperty("header") Header header,
+			@JsonProperty("body") Body body
+	) {
+	}
+
 	public record Header(
 			@JsonProperty("resultCode") String resultCode,
-			@JsonProperty("resultMsg")  String resultMsg
-	) {}
+			@JsonProperty("resultMsg") String resultMsg
+	) {
+	}
 
 	public record Body(
-			@JsonProperty("items")        List<FoodItem> items,
-			@JsonProperty("numOfRows")    Integer numOfRows,
-			@JsonProperty("pageNo")       Integer pageNo,
-			@JsonProperty("totalCount")   Integer totalCount
-	) {}
+			@JsonProperty("items") List<FoodItem> items,
+			@JsonProperty("numOfRows") Integer numOfRows,
+			@JsonProperty("pageNo") Integer pageNo,
+			@JsonProperty("totalCount") Integer totalCount
+	) {
+	}
 
 	public record FoodItem(
 			@JsonProperty("foodCd")
