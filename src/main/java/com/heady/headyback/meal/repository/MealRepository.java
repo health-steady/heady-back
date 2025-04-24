@@ -29,7 +29,8 @@ public interface MealRepository extends JpaRepository<Meal, Long> {
 
 	@Query("""
 			    SELECT m FROM Meal m
-				LEFT JOIN FETCH m.foods
+				LEFT JOIN FETCH m.mealItems mi
+				LEFT JOIN FETCH mi.food
 			    WHERE m.member.id = :memberId
 			      AND m.mealDateTime BETWEEN :start AND :end
 			""")

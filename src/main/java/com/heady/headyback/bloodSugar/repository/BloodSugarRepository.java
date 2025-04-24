@@ -17,7 +17,8 @@ public interface BloodSugarRepository extends JpaRepository<BloodSugar, Long> {
 	@Query("""
 			    SELECT bs FROM BloodSugar bs
 			    LEFT JOIN FETCH bs.meal m
-			    LEFT JOIN FETCH m.foods
+			    LEFT JOIN FETCH m.mealItems mi
+			    LEFT JOIN FETCH mi.food
 			    WHERE bs.member.id = :memberId
 			      AND bs.measuredAt BETWEEN :start AND :end
 			    ORDER BY bs.measuredAt

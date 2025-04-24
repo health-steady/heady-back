@@ -12,7 +12,7 @@ public record MealDto(
 		MealType mealType,
 		LocalDateTime mealDateTime,
 		String memo,
-		Set<FoodDto> foodDtos
+		Set<MealItemDto> mealItemDtos
 ) {
 	public static MealDto of(Meal meal) {
 		return new MealDto(
@@ -20,8 +20,8 @@ public record MealDto(
 				meal.getMealType(),
 				meal.getMealDateTime(),
 				meal.getMemo(),
-				meal.getFoods().stream()
-						.map(FoodDto::of)
+				meal.getMealItems().stream()
+						.map(MealItemDto::of)
 						.collect(Collectors.toSet())
 		);
 	}

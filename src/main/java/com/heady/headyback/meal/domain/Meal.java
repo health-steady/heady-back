@@ -58,7 +58,7 @@ public class Meal {
 	private LocalDateTime updatedAt;
 
 	@OneToMany(mappedBy = "meal", cascade = CascadeType.ALL)
-	private List<Food> foods = new ArrayList<>();
+	private List<MealItem> mealItems = new ArrayList<>();
 
 	public static Meal ofRecord(
 			Member member,
@@ -81,10 +81,10 @@ public class Meal {
 		BigDecimal protein = BigDecimal.ZERO;
 		BigDecimal fat = BigDecimal.ZERO;
 
-		for (Food food : foods) {
-			carbohydrate = carbohydrate.add(defaultIfNull(food.getCarbohydrates()));
-			protein = protein.add(defaultIfNull(food.getProtein()));
-			fat = fat.add(defaultIfNull(food.getFat()));
+		for (MealItem mealItem : mealItems) {
+			carbohydrate = carbohydrate.add(defaultIfNull(mealItem.getFood().getCarbohydrates()));
+			protein = protein.add(defaultIfNull(mealItem.getFood().getProtein()));
+			fat = fat.add(defaultIfNull(mealItem.getFood().getFat()));
 		}
 
 		return Nutrient.of(carbohydrate, protein, fat);
@@ -92,15 +92,7 @@ public class Meal {
 
 	private static void addFoods(Meal meal, List<String> foods) {
 		// TODO 식품영양성분 DB 활용
-		meal.foods = new ArrayList<>();
-		foods.forEach(
-				name -> meal.foods.add(
-						Food.ofAdd(
-								meal,
-								name
-						)
-				)
-		);
+		meal.mealItems = new ArrayList<>();
 	}
 
 	private BigDecimal defaultIfNull(BigDecimal value) {

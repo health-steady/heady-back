@@ -5,11 +5,11 @@ import java.math.BigDecimal;
 import com.heady.headyback.meal.domain.Food;
 
 public record FoodDto(
-		Long id,
+		String code,
 		String name,
 		BigDecimal calories
 ) {
 	public static FoodDto of(Food food) {
-		return new FoodDto(food.getId(), food.getName(), food.getCalories());
+		return new FoodDto(food.getCode(), food.getName(), food.getCalories());
 	}
 }

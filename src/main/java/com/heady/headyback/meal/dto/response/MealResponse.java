@@ -13,7 +13,7 @@ public record MealResponse(
 		MealType mealType,
 		LocalDateTime mealDateTime,
 		String memo,
-		List<FoodResponse> foods
+		List<MealItemResponse> foods
 ) {
 
 	public static MealResponse of(MealDto mealDto) {
@@ -22,9 +22,9 @@ public record MealResponse(
 				mealDto.mealType(),
 				mealDto.mealDateTime(),
 				mealDto.memo(),
-				mealDto.foodDtos().stream()
-						.map(FoodResponse::of)
-						.sorted(Comparator.comparing(FoodResponse::id))
+				mealDto.mealItemDtos().stream()
+						.map(MealItemResponse::of)
+						.sorted(Comparator.comparing(MealItemResponse::id))
 						.collect(Collectors.toList())
 		);
 	}
