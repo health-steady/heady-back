@@ -18,11 +18,10 @@ public class FoodService {
 	private final WebClientUtil webClientUtil;
 
 	public FoodApiResponse searchFoods(
-			String foodName,
-			String pageNo,
-			String numOfRows
+			int pageNo,
+			int numOfRows
 	) {
-		URI uri = webClientUtil.buildRequestUri(foodName, pageNo, numOfRows);
+		URI uri = webClientUtil.buildRequestUri(pageNo, numOfRows);
 		log.info("▶ OpenAPI URL = {}", uri);
 		return webClientUtil.get(uri, FoodApiResponse.class);
 	}

@@ -28,6 +28,8 @@ public class Food {
 
 	@Column(nullable = false)
 	private String name;
+	@Column(nullable = false)
+	private String manufacturerName;
 
 	@Column(precision = 9, scale = 2)
 	private BigDecimal calories;
@@ -54,9 +56,10 @@ public class Food {
 	@LastModifiedDate
 	private LocalDateTime updatedAt;
 
-	static Food ofRecord(
+	public static Food ofRecord(
 			String code,
 			String name,
+			String manufacturerName,
 			BigDecimal calories,
 			BigDecimal carbohydrates,
 			BigDecimal sugar,
@@ -70,6 +73,7 @@ public class Food {
 		Food food = new Food();
 		food.code = code;
 		food.name = name;
+		food.manufacturerName = manufacturerName;
 		food.calories = calories;
 		food.carbohydrates = carbohydrates;
 		food.sugar = sugar;

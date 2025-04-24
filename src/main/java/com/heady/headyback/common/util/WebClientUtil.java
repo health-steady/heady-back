@@ -36,9 +36,8 @@ public class WebClientUtil {
 	}
 
 	public URI buildRequestUri(
-			String foodNm,
-			String pageNo,
-			String numOfRows
+			int pageNo,
+			int numOfRows
 	) {
 		return UriComponentsBuilder
 				.fromUri(URI.create(foodApiProperties.getBaseUrl()))
@@ -46,7 +45,6 @@ public class WebClientUtil {
 				.queryParam("pageNo", pageNo)
 				.queryParam("numOfRows", numOfRows)
 				.queryParam("type", "json")
-				.queryParam("foodNm", foodNm)
 				.build()
 				.encode()
 				.toUri();
