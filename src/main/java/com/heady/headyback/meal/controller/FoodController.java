@@ -20,12 +20,13 @@ public class FoodController {
 
 	@GetMapping("/search")
 	public ResponseEntity<?> getFoods(
-			@RequestParam("pageNo") int pageNo,
-			@RequestParam("numOfRows") int numOfRows
+			@RequestParam("keyword") String keyword,
+			@RequestParam(name = "pageNo", required = false, defaultValue = "1") Integer pageNo,
+			@RequestParam(name = "pageSize", required = false, defaultValue = "10") Integer pageSize
 	) {
 		return ResponseEntity.ok().body(
 				FoodSearchResponse.from(
-						foodService.searchFoods(pageNo, numOfRows)
+						foodService.searchFoods(pageNo, pageSize)
 				)
 		);
 	}

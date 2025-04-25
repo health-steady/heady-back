@@ -325,3 +325,6 @@ gradle-app.setting
 scripts/python-scripts/.venv/
 
 # End of https://www.toptal.com/developers/gitignore/api/java,intellij,intellij+all,windows,macos,gradle
+
+# QueryDSL generated sources
+/src/main/generated/
