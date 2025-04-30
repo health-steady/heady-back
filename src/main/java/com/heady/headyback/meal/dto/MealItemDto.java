@@ -7,6 +7,6 @@ public record MealItemDto(
 		FoodDto foodDto
 ) {
 	public static MealItemDto of(MealItem mealItem) {
-		return new MealItemDto(mealItem.getId(), FoodDto.of(mealItem.getFood()));
+		return new MealItemDto(mealItem.getId(), FoodDto.from(mealItem.getFood()));
 	}
 }

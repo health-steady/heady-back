@@ -1,11 +1,17 @@
 package com.heady.headyback.meal.service;
 
-import java.net.URI;
+import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import com.heady.headyback.common.util.WebClientUtil;
-import com.heady.headyback.meal.dto.response.FoodApiResponse;
+import com.heady.headyback.meal.domain.Food;
+import com.heady.headyback.meal.dto.FoodDto;
+import com.heady.headyback.meal.repository.FoodRepository;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,15 +21,19 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class FoodService {
 
-	private final WebClientUtil webClientUtil;
+	private final FoodRepository foodRepository;
 
-	public FoodApiResponse searchFoods(
+	@Transactional(readOnly = true)
+	public Page<FoodDto> searchFoods(
+			String keyword,
 			int pageNo,
-			int numOfRows
+			int pageSize
 	) {
-		URI uri = webClientUtil.buildRequestUri(pageNo, numOfRows);
-		log.info("▶ OpenAPI URL = {}", uri);
-		return webClientUtil.get(uri, FoodApiResponse.class);
+		long offset = (long)(pageNo - 1) * pageSize;
+		List<Food> content = foodRepository.searchByKeyword(keyword, offset, pageSize);
+		long total = foodRepository.countByKeyword(keyword);
+		Pageable pageable = PageRequest.of(pageNo - 1, pageSize);
+		return new PageImpl<>(content, pageable, total).map(FoodDto::from);
 	}
 
 }

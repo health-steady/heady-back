@@ -1,5 +1,6 @@
 package com.heady.headyback.meal.controller;
 
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,15 +20,14 @@ public class FoodController {
 	private final FoodService foodService;
 
 	@GetMapping("/search")
-	public ResponseEntity<?> getFoods(
+	public ResponseEntity<Page<FoodSearchResponse>> getFoods(
 			@RequestParam("keyword") String keyword,
 			@RequestParam(name = "pageNo", required = false, defaultValue = "1") Integer pageNo,
 			@RequestParam(name = "pageSize", required = false, defaultValue = "10") Integer pageSize
 	) {
 		return ResponseEntity.ok().body(
-				FoodSearchResponse.from(
-						foodService.searchFoods(pageNo, pageSize)
-				)
+				foodService.searchFoods(keyword, pageNo, pageSize)
+						.map(FoodSearchResponse::from)
 		);
 	}
 }

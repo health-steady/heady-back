@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 import com.heady.headyback.meal.domain.Food;
 
 @Repository
-public interface FoodRepository extends JpaRepository<Food, Long> {
+public interface FoodRepository extends JpaRepository<Food, Long>, FoodCustomRepository {
 }
