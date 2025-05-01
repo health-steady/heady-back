@@ -1,8 +1,11 @@
 package com.heady.headyback.common.config;
 
+import static org.springframework.data.web.config.EnableSpringDataWebSupport.PageSerializationMode.*;
+
 import java.util.List;
 
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.web.config.EnableSpringDataWebSupport;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
@@ -16,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 
 @Configuration
 @RequiredArgsConstructor
+@EnableSpringDataWebSupport(pageSerializationMode = VIA_DTO)
 public class WebConfig implements WebMvcConfigurer {
 
 	private final JwtInterceptor jwtInterceptor;
