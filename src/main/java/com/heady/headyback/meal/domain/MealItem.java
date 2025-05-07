@@ -2,6 +2,7 @@ package com.heady.headyback.meal.domain;
 
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.FetchType;
@@ -31,6 +32,21 @@ public class MealItem {
 	private Meal meal;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "food_code", nullable = false)
+	@JoinColumn(name = "food_code")
 	private Food food;
+
+	@Column(nullable = false)
+	private String name;
+
+	public static MealItem ofAdd(
+			Meal meal,
+			Food food,
+			String name
+	) {
+		MealItem mealItem = new MealItem();
+		mealItem.meal = meal;
+		mealItem.name = name;
+		mealItem.food = food;
+		return mealItem;
+	}
 }

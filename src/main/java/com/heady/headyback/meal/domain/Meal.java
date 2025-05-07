@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -64,7 +65,7 @@ public class Meal {
 			Member member,
 			MealType mealType,
 			LocalDateTime mealDateTime,
-			List<String> foodNames,
+			List<FoodEntry> foodEntries,
 			String memo
 	) {
 		Meal meal = new Meal();
@@ -72,27 +73,36 @@ public class Meal {
 		meal.mealType = mealType;
 		meal.mealDateTime = mealDateTime;
 		meal.memo = memo;
-		addFoods(meal, foodNames);
+		addMealItem(meal, foodEntries);
 		return meal;
 	}
 
 	public Nutrient calculateTotalNutrient() {
-		BigDecimal carbohydrate = BigDecimal.ZERO;
-		BigDecimal protein = BigDecimal.ZERO;
-		BigDecimal fat = BigDecimal.ZERO;
-
-		for (MealItem mealItem : mealItems) {
-			carbohydrate = carbohydrate.add(defaultIfNull(mealItem.getFood().getCarbohydrates()));
-			protein = protein.add(defaultIfNull(mealItem.getFood().getProtein()));
-			fat = fat.add(defaultIfNull(mealItem.getFood().getFat()));
-		}
-
-		return Nutrient.of(carbohydrate, protein, fat);
+		return mealItems.stream()
+				.map(MealItem::getFood)
+				.filter(Objects::nonNull)
+				.map(f -> Nutrient.of(
+						defaultIfNull(f.getCarbohydrates()),
+						defaultIfNull(f.getProtein()),
+						defaultIfNull(f.getFat())
+				))
+				.reduce(Nutrient.zero(), Nutrient::add);
 	}
 
-	private static void addFoods(Meal meal, List<String> foods) {
-		// TODO 식품영양성분 DB 활용
+	private static void addMealItem(Meal meal, List<FoodEntry> foodEntries) {
 		meal.mealItems = new ArrayList<>();
+		foodEntries.forEach(
+				foodEntry -> {
+					meal.mealItems.add(
+							MealItem.ofAdd(
+									meal,
+									foodEntry.food(),
+									foodEntry.name()
+							)
+					);
+				}
+
+		);
 	}
 
 	private BigDecimal defaultIfNull(BigDecimal value) {

@@ -4,9 +4,9 @@ import com.heady.headyback.meal.domain.MealItem;
 
 public record MealItemDto(
 		Long id,
-		FoodDto foodDto
+		String name
 ) {
 	public static MealItemDto of(MealItem mealItem) {
-		return new MealItemDto(mealItem.getId(), FoodDto.from(mealItem.getFood()));
+		return new MealItemDto(mealItem.getId(), mealItem.getName());
 	}
 }

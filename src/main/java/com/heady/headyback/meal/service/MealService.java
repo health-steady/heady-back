@@ -12,14 +12,18 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.heady.headyback.auth.domain.Accessor;
-import com.heady.headyback.meal.dto.NutrientSummaryDto;
 import com.heady.headyback.bloodSugar.repository.BloodSugarRepository;
 import com.heady.headyback.common.exception.CustomException;
+import com.heady.headyback.meal.domain.Food;
+import com.heady.headyback.meal.domain.FoodEntry;
 import com.heady.headyback.meal.domain.Meal;
 import com.heady.headyback.meal.domain.Nutrient;
 import com.heady.headyback.meal.domain.enumerated.MealType;
 import com.heady.headyback.meal.dto.MealDto;
+import com.heady.headyback.meal.dto.NutrientSummaryDto;
 import com.heady.headyback.meal.dto.request.MealRequest;
+import com.heady.headyback.meal.dto.request.MealRequest.FoodInfo;
+import com.heady.headyback.meal.repository.FoodRepository;
 import com.heady.headyback.meal.repository.MealRepository;
 import com.heady.headyback.member.domain.Member;
 import com.heady.headyback.member.repository.MemberRepository;
@@ -33,6 +37,7 @@ public class MealService {
 	private final MemberRepository memberRepository;
 	private final MealRepository mealRepository;
 	private final BloodSugarRepository bloodSugarRepository;
+	private final FoodRepository foodRepository;
 
 	// TODO : 식사 타입 이미 존재 확인 아침, 점심, 저녁 각 1번씩
 	// TODO : 간식은 어떻게?? 혈당이랑 매칭 어떻게? 혈당 등록할 때 API로 식사 목록을 가져오고 선택지를 주기?
@@ -45,7 +50,7 @@ public class MealService {
 				member,
 				MealType.getMappedMealType(request.mealType()),
 				request.mealDateTime(),
-				request.foodNames(),
+				getFoodEntries(request.foods()),
 				request.memo()
 		);
 
@@ -97,5 +102,20 @@ public class MealService {
 		}
 
 		return Nutrient.of(totalCarb, totalProtein, totalFat);
+	}
+
+	private List<FoodEntry> getFoodEntries(List<FoodInfo> foods) {
+		return foods.stream()
+				.map(fi -> {
+					if (fi.code() != null && !fi.code().isBlank()) {
+						// DB에 있는 음식이면 실제 조회
+						Food food = foodRepository.getReferenceById(fi.code());
+						return FoodEntry.of(food, food.getName());
+					} else {
+						// 직접 입력한 음식
+						return FoodEntry.of(null, fi.name());
+					}
+				})
+				.toList();
 	}
 }

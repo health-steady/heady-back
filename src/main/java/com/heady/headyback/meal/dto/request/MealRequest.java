@@ -28,8 +28,16 @@ public record MealRequest(
 		LocalDateTime mealDateTime,
 
 		@NotEmpty(message = REQUIRED_FOOD_LIST)
-		List<@NotBlank(message = REQUIRED_FOOD_NAME) String> foodNames,
+		List<FoodInfo> foods,
 
 		String memo
 ) {
+	public record FoodInfo(
+
+			String code,
+
+			@NotBlank(message = REQUIRED_FOOD_NAME)
+			String name
+	) {
+	}
 }
