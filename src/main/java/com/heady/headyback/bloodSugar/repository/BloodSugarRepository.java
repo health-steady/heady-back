@@ -74,4 +74,11 @@ public interface BloodSugarRepository extends JpaRepository<BloodSugar, Long> {
 			@Param("end") LocalDateTime end
 	);
 
+	@Query("SELECT bs FROM BloodSugar bs WHERE bs.member.id = :memberId AND bs.measuredAt BETWEEN :start AND :end ORDER BY bs.measuredAt")
+	List<BloodSugar> findByMemberIdAndMeasuredAtBetween(
+			@Param("memberId") Long memberId,
+			@Param("start") LocalDateTime start,
+			@Param("end") LocalDateTime end
+	);
+
 }

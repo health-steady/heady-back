@@ -14,6 +14,7 @@ import com.heady.headyback.auth.domain.Accessor;
 import com.heady.headyback.bloodSugar.domain.BloodSugar;
 import com.heady.headyback.bloodSugar.domain.enumerated.MeasureType;
 import com.heady.headyback.bloodSugar.dto.BloodSugarDto;
+import com.heady.headyback.bloodSugar.dto.BloodSugarWithMealDto;
 import com.heady.headyback.bloodSugar.dto.BloodSugarSummaryDto;
 import com.heady.headyback.bloodSugar.dto.request.BloodSugarRequest;
 import com.heady.headyback.bloodSugar.repository.BloodSugarRepository;
@@ -35,7 +36,7 @@ public class BloodSugarService {
 	private final MealRepository mealRepository;
 
 	@Transactional
-	public BloodSugarDto record(Accessor accessor, BloodSugarRequest request) {
+	public BloodSugarWithMealDto record(Accessor accessor, BloodSugarRequest request) {
 		Member member = memberRepository.findByPublicId(accessor.getPublicId())
 				.orElseThrow(() -> new CustomException(MEMBER_NOT_FOUND));
 
@@ -44,7 +45,7 @@ public class BloodSugarService {
 		MealType mealType = MealType.getMappedMealType(request.mealType());
 		Meal meal = getMeal(member.getId(), request.measuredAt(), measureType, mealType);
 
-		return BloodSugarDto.of(
+		return BloodSugarWithMealDto.from(
 				bloodSugarRepository.save(
 						BloodSugar.ofRecord(
 								member,
@@ -60,7 +61,7 @@ public class BloodSugarService {
 	}
 
 	@Transactional(readOnly = true)
-	public List<BloodSugarDto> getAllByDate(Accessor accessor, LocalDate date) {
+	public List<BloodSugarWithMealDto> getAllByDate(Accessor accessor, LocalDate date) {
 		Member member = memberRepository.findByPublicId(accessor.getPublicId())
 				.orElseThrow(() -> new CustomException(MEMBER_NOT_FOUND));
 		return bloodSugarRepository.findAllByMemberIdAndMeasuredAtBetween(
@@ -69,7 +70,21 @@ public class BloodSugarService {
 						date.plusDays(1).atStartOfDay()
 				)
 				.stream()
-				.map(BloodSugarDto::of)
+				.map(BloodSugarWithMealDto::from)
+				.collect(Collectors.toList());
+	}
+
+	@Transactional(readOnly = true)
+	public List<BloodSugarDto> getByDate(Accessor accessor, LocalDate date) {
+		Member member = memberRepository.findByPublicId(accessor.getPublicId())
+				.orElseThrow(() -> new CustomException(MEMBER_NOT_FOUND));
+		return bloodSugarRepository.findByMemberIdAndMeasuredAtBetween(
+						member.getId(),
+						date.atStartOfDay(),
+						date.plusDays(1).atStartOfDay()
+				)
+				.stream()
+				.map(BloodSugarDto::from)
 				.collect(Collectors.toList());
 	}
 
@@ -84,6 +99,7 @@ public class BloodSugarService {
 		);
 	}
 
+	//TODO : null 처리
 	private Meal getMeal(
 			Long memberId,
 			LocalDateTime measuredAt,
