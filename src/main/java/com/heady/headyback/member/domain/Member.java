@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.UUID;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -23,6 +24,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToOne;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import lombok.Getter;
 
@@ -35,6 +37,9 @@ public class Member {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+
+	@Column(columnDefinition = "BINARY(16)", unique = true, nullable = false, updatable = false)
+	private UUID publicId;
 
 	@OneToOne(mappedBy = "member", cascade = CascadeType.ALL)
 	private Target target;
@@ -118,5 +123,12 @@ public class Member {
 
 	private static LocalDate toLocalDate(String birthdate) {
 		return LocalDate.parse(birthdate, DateTimeFormatter.BASIC_ISO_DATE);
+	}
+
+	@PrePersist
+	private void generateUuid() {
+		if (this.publicId == null) {
+			this.publicId = UUID.randomUUID();
+		}
 	}
 }

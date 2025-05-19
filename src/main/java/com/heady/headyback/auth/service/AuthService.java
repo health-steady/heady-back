@@ -2,6 +2,8 @@ package com.heady.headyback.auth.service;
 
 import static com.heady.headyback.member.exception.MemberExceptionCode.*;
 
+import java.util.UUID;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,10 +33,10 @@ public class AuthService {
 	}
 
 	@Transactional(readOnly = true)
-	public Accessor getAuthMember(Long memberId) {
-		Member member = memberRepository.findById(memberId)
+	public Accessor getAuthMember(UUID publicId) {
+		Member member = memberRepository.findByPublicId(publicId)
 				.orElseThrow(() -> new CustomException(MEMBER_NOT_FOUND));
-		return Accessor.member(member.getId());
+		return Accessor.member(member.getPublicId());
 	}
 
 	private void checkPassword(Member member, String rowPassword) {

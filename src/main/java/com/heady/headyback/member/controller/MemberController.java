@@ -48,7 +48,7 @@ public class MemberController {
 	@GetMapping("/me")
 	public ResponseEntity<?> me(@Auth Accessor accessor) {
 		return ResponseEntity.ok(Map.of(
-				"id", accessor.getId(),
+				"id", accessor.getPublicId(),
 				"authority", accessor.getAuthority()
 		));
 	}

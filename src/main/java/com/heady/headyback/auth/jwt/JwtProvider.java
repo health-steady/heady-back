@@ -29,7 +29,7 @@ public class JwtProvider {
 		Date expiredDate = new Date(now.getTime() + expirationMillis);
 
 		return Jwts.builder()
-				.setSubject(member.getId().toString())
+				.setSubject(member.getPublicId().toString())
 				.setIssuedAt(now)
 				.setExpiration(expiredDate)
 				.claim(JwtProperties.TOKEN_TYPE, tokenType.name())

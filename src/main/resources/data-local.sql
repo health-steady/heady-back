@@ -57,10 +57,11 @@ VALUES ('P113-201020100-0169', '감자튀김 시즈닝 파우더-불닭볶음면
         NOW(), NOW());
 
 -- 3) members 삽입
-INSERT INTO members (id, email, password, name, nickname,
+INSERT INTO members (id, public_id, email, password, name, nickname,
                      birthdate, gender, phone, height, weight,
                      created_at, updated_at, status, profile_image_url, role, is_deleted)
 VALUES (1,
+        UUID_TO_BIN(UUID()),
         'tjwndnjs0000@gmail.com',
         '$2a$10$JVh2vAEqt4O//lcQuS.gl.kM57QoCEmYZRGiyGfMcOwUDHNjnMqEm',
         '서주투',

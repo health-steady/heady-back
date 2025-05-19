@@ -1,5 +1,7 @@
 package com.heady.headyback.auth.context;
 
+import java.util.UUID;
+
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.support.WebDataBinderFactory;
@@ -33,11 +35,11 @@ public class LoginArgumentResolver implements HandlerMethodArgumentResolver {
 			WebDataBinderFactory binderFactory) throws Exception {
 
 		HttpServletRequest request = (HttpServletRequest)webRequest.getNativeRequest();
-		Long memberId = (Long)request.getAttribute("memberId");
+		UUID publicId = (UUID)request.getAttribute("publicId");
 
-		if (memberId == null) {
+		if (publicId == null) {
 			// TODO Guest 모드?
 		}
-		return authService.getAuthMember(memberId);
+		return authService.getAuthMember(publicId);
 	}
 }

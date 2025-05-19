@@ -1,23 +1,25 @@
 package com.heady.headyback.auth.domain;
 
+import java.util.UUID;
+
 import lombok.Getter;
 
 @Getter
 public class Accessor {
 
-	private final Long id;
+	private final UUID publicId;
 	private final Authority authority;
 
-	public Accessor(Long memberId, Authority authority) {
-		this.id = memberId;
+	public Accessor(UUID publicId, Authority authority) {
+		this.publicId = publicId;
 		this.authority = authority;
 	}
 
 	public static Accessor guest() {
-		return new Accessor(0L, Authority.GUEST);
+		return new Accessor(null, Authority.GUEST);
 	}
 
-	public static Accessor member(final Long memberId) {
-		return new Accessor(memberId, Authority.MEMBER);
+	public static Accessor member(final UUID publicId) {
+		return new Accessor(publicId, Authority.MEMBER);
 	}
 }

@@ -36,7 +36,7 @@ public class BloodSugarService {
 
 	@Transactional
 	public BloodSugarDto record(Accessor accessor, BloodSugarRequest request) {
-		Member member = memberRepository.findById(accessor.getId())
+		Member member = memberRepository.findByPublicId(accessor.getPublicId())
 				.orElseThrow(() -> new CustomException(MEMBER_NOT_FOUND));
 
 		MeasureType measureType = MeasureType.getMappedMeasureType(
@@ -61,7 +61,7 @@ public class BloodSugarService {
 
 	@Transactional(readOnly = true)
 	public List<BloodSugarDto> getAllByDate(Accessor accessor, LocalDate date) {
-		Member member = memberRepository.findById(accessor.getId())
+		Member member = memberRepository.findByPublicId(accessor.getPublicId())
 				.orElseThrow(() -> new CustomException(MEMBER_NOT_FOUND));
 		return bloodSugarRepository.findAllByMemberIdAndMeasuredAtBetween(
 						member.getId(),
@@ -75,7 +75,7 @@ public class BloodSugarService {
 
 	@Transactional(readOnly = true)
 	public BloodSugarSummaryDto getSummaryByDate(Accessor accessor, LocalDate date) {
-		Member member = memberRepository.findById(accessor.getId())
+		Member member = memberRepository.findByPublicId(accessor.getPublicId())
 				.orElseThrow(() -> new CustomException(MEMBER_NOT_FOUND));
 		return bloodSugarRepository.findSummaryByMemberIdAndMeasuredAtBetween(
 				member.getId(),

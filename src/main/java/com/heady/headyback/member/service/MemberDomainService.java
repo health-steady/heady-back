@@ -40,7 +40,7 @@ public class MemberDomainService {
 
 	@Transactional(readOnly = true)
 	public MemberDto get(Accessor accessor) {
-		return MemberDto.of(memberRepository.findById(accessor.getId())
+		return MemberDto.of(memberRepository.findByPublicId(accessor.getPublicId())
 				.orElseThrow(() -> new CustomException(MEMBER_NOT_FOUND))
 		);
 	}

@@ -2,6 +2,8 @@ package com.heady.headyback.auth.jwt;
 
 import static com.heady.headyback.auth.exception.AuthExceptionCode.*;
 
+import java.util.UUID;
+
 import org.springframework.stereotype.Component;
 
 import com.heady.headyback.common.exception.CustomException;
@@ -32,8 +34,8 @@ public class JwtResolver {
 		}
 	}
 
-	public Long getMemberId(String token) {
-		return Long.parseLong(parseClaims(token).getSubject());
+	public UUID getMemberPublicId(String token) {
+		return UUID.fromString(parseClaims(token).getSubject());
 	}
 
 	private Claims parseClaims(String token) {

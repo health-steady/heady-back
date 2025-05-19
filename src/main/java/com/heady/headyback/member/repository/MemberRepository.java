@@ -1,6 +1,7 @@
 package com.heady.headyback.member.repository;
 
 import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -18,4 +19,6 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
 	@Query("SELECT m FROM Member m where m.email = :email and m.isDeleted = false")
 	Optional<Member> findByEmail(@Param("email") Email email);
+
+	Optional<Member> findByPublicId(UUID publicId);
 }

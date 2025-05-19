@@ -43,7 +43,7 @@ public class MealService {
 	// TODO : 간식은 어떻게?? 혈당이랑 매칭 어떻게? 혈당 등록할 때 API로 식사 목록을 가져오고 선택지를 주기?
 	@Transactional
 	public MealDto save(Accessor accessor, MealRequest request) {
-		Member member = memberRepository.findById(accessor.getId())
+		Member member = memberRepository.findByPublicId(accessor.getPublicId())
 				.orElseThrow(() -> new CustomException(MEMBER_NOT_FOUND));
 
 		Meal meal = Meal.ofRecord(
@@ -59,7 +59,7 @@ public class MealService {
 	}
 
 	public NutrientSummaryDto getNutrientSummary(Accessor accessor, LocalDate date) {
-		Member member = memberRepository.findById(accessor.getId())
+		Member member = memberRepository.findByPublicId(accessor.getPublicId())
 				.orElseThrow(() -> new CustomException(MEMBER_NOT_FOUND));
 
 		return NutrientSummaryDto.of(

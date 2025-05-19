@@ -1,5 +1,7 @@
 package com.heady.headyback.auth.jwt;
 
+import java.util.UUID;
+
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
@@ -23,8 +25,8 @@ public class JwtInterceptor implements HandlerInterceptor {
 			String token = header.substring(7);
 
 			if (jwtResolver.validate(token)) {
-				Long memberId = jwtResolver.getMemberId(token);
-				request.setAttribute("memberId", memberId);
+				UUID publicId = jwtResolver.getMemberPublicId(token);
+				request.setAttribute("publicId", publicId);
 			}
 		}
 
