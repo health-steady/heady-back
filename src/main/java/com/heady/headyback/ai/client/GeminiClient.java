@@ -2,6 +2,7 @@ package com.heady.headyback.ai.client;
 
 import java.time.Duration;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
@@ -14,6 +15,7 @@ import org.springframework.web.reactive.function.client.WebClientResponseExcepti
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.heady.headyback.ai.dto.request.ContentRequest;
+import com.heady.headyback.ai.dto.response.AiAnalysisResponse;
 import com.heady.headyback.ai.dto.response.GeminiResponse;
 
 import lombok.RequiredArgsConstructor;
@@ -35,17 +37,44 @@ public class GeminiClient {
 	private final ObjectMapper objectMapper;
 
 	/**
-	 * 동기 방식으로 Gemini API를 호출하고, 첫 번째 응답 파트를 텍스트로 반환합니다.
+	 * 동기 방식으로 JSON 스키마를 이용해 Gemini API를 호출하고,
+	 * 첫 번째 응답 파트를 텍스트로 반환합니다.
 	 */
-	public String generateContent(String prompt) {
-		// 1) 요청 DTO 생성
-		ContentRequest requestDto = new ContentRequest(
-				List.of(new ContentRequest.Content(
-						List.of(new ContentRequest.Part(prompt))
-				))
+	public AiAnalysisResponse generateContent(String prompt) {
+		// 1) contents
+		var content = new ContentRequest.Content(
+				List.of(new ContentRequest.Part(prompt))
 		);
 
-		// 2) DTO → JSON
+		// 2) generationConfig: 의료 리포트 JSON 스키마
+		// top-level OBJECT, 세 개의 프로퍼티(bloodSugarAnalysis, dietAnalysis, recommendedActionPlan)
+		Map<String, ContentRequest.PropertySchema> props = Map.of(
+				"bloodSugarAnalysis", new ContentRequest.PropertySchema.TypeOnly("STRING"),
+				"dietAnalysis",      new ContentRequest.PropertySchema.TypeOnly("STRING"),
+				"recommendedActionPlan",
+				new ContentRequest.PropertySchema.ArrayOfString(
+						"ARRAY",
+						new ContentRequest.PropertySchema.TypeOnly("STRING")
+				)
+		);
+		ContentRequest.ResponseSchema responseSchema = new ContentRequest.ResponseSchema(
+				"OBJECT",
+				null,      // items
+				props,     // properties
+				List.of("bloodSugarAnalysis", "dietAnalysis", "recommendedActionPlan")
+		);
+		var generationConfig = new ContentRequest.GenerationConfig(
+				"application/json",
+				responseSchema
+		);
+
+		// 3) 요청 DTO 조립
+		var requestDto = new ContentRequest(
+				List.of(content),
+				generationConfig
+		);
+
+		// 4) DTO → JSON
 		String body;
 		try {
 			body = objectMapper.writeValueAsString(requestDto);
@@ -54,7 +83,7 @@ public class GeminiClient {
 			throw new RuntimeException("Gemini 요청 직렬화 실패", e);
 		}
 
-		// 3) WebClient 생성 (매 호출마다 빌드해도 되고, 생성자에서 한 번만 만들어도 무방합니다)
+		// 5) WebClient 호출 (동기)
 		WebClient client = webClientBuilder
 				.baseUrl(BASE_URL)
 				.defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
@@ -62,26 +91,28 @@ public class GeminiClient {
 
 		GeminiResponse response;
 		try {
-			// 4) 동기 호출: block(Duration) 으로 타임아웃 설정 가능
 			response = client.post()
-					.uri(uriBuilder -> uriBuilder.queryParam("key", apiKey).build())
+					.uri(uri -> uri.queryParam("key", apiKey).build())
 					.bodyValue(body)
 					.retrieve()
 					.onStatus(HttpStatusCode::is4xxClientError,
 							resp -> resp.bodyToMono(String.class)
-									.flatMap(msg -> Mono.error(new IllegalArgumentException("잘못된 요청: " + msg))))
+									.flatMap(msg -> Mono.error(
+											new IllegalArgumentException("잘못된 요청: " + msg))))
 					.onStatus(HttpStatusCode::is5xxServerError,
 							resp -> resp.bodyToMono(String.class)
-									.flatMap(msg -> Mono.error(new IllegalStateException("서버 오류: " + msg))))
+									.flatMap(msg -> Mono.error(
+											new IllegalStateException("서버 오류: " + msg))))
 					.bodyToMono(GeminiResponse.class)
 					.timeout(Duration.ofSeconds(10))
-					.block();  // <= 동기 처리 지점
+					.block();
 		} catch (WebClientResponseException e) {
-			log.error("Gemini API HTTP error {}: {}", e.getRawStatusCode(), e.getResponseBodyAsString(), e);
+			log.error("Gemini API HTTP error {}: {}", e.getStatusCode(),
+					e.getResponseBodyAsString(), e);
 			throw new RuntimeException("Gemini API HTTP 오류", e);
 		}
 
-		// 5) 응답 검증 및 텍스트 추출
+		// 6) 응답에서 첫 파트 텍스트 추출
 		if (response == null
 				|| response.candidates() == null
 				|| response.candidates().isEmpty()
@@ -95,7 +126,12 @@ public class GeminiClient {
 				.parts()
 				.get(0)
 				.text();
-		log.debug("Gemini 동기 응답: {}", result);
-		return result;
+
+		try {
+			return objectMapper.readValue(result, AiAnalysisResponse.class);
+		} catch (JsonProcessingException e) {
+			log.error("분석 응답 파싱 실패: {}", result, e);
+			throw new RuntimeException("Gemini 분석 응답 파싱 실패", e);
+		}
 	}
 }

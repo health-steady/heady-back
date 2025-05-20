@@ -5,17 +5,17 @@ import static com.heady.headyback.member.exception.MemberExceptionCode.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
 import com.heady.headyback.ai.client.GeminiClient;
+import com.heady.headyback.ai.dto.response.AiAnalysisResponse;
+import com.heady.headyback.ai.util.PromptBuilder;
 import com.heady.headyback.auth.domain.Accessor;
-import com.heady.headyback.bloodSugar.domain.BloodSugar;
 import com.heady.headyback.bloodSugar.dto.BloodSugarWithMealWithMealItemWithFoodDto;
 import com.heady.headyback.bloodSugar.repository.BloodSugarRepository;
 import com.heady.headyback.common.exception.CustomException;
-import com.heady.headyback.member.domain.Member;
+import com.heady.headyback.member.dto.MemberDto;
 import com.heady.headyback.member.repository.MemberRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -27,19 +27,22 @@ public class AiAnalysisService {
 	private final MemberRepository memberRepository;
 	private final BloodSugarRepository bloodSugarRepository;
 	private final GeminiClient geminiClient;
+	private final PromptBuilder promptBuilder;
 
-	public List<BloodSugarWithMealWithMealItemWithFoodDto> analyzeHealth(Accessor accessor) {
-		Member member = memberRepository.findByPublicId(accessor.getPublicId())
+	public AiAnalysisResponse analyzeHealth(Accessor accessor) {
+		MemberDto member = memberRepository.findByPublicId(accessor.getPublicId())
+				.map(MemberDto::of)
 				.orElseThrow(() -> new CustomException(MEMBER_NOT_FOUND));
 		LocalDate now = LocalDate.now();
-		List<BloodSugar> bloodSugarList = bloodSugarRepository.findByMemberAndPeriodWithMealAndMealItemAndFood(
-				member.getId(),
-				now.minusDays(6).atStartOfDay(),
-				now.atTime(LocalTime.MAX)
-		);
-		// return geminiClient.generateContent("ping");
-		return bloodSugarList.stream()
-				.map(BloodSugarWithMealWithMealItemWithFoodDto::from)
-				.collect(Collectors.toList());
+		List<BloodSugarWithMealWithMealItemWithFoodDto> records =
+				bloodSugarRepository.findByMemberAndPeriodWithMealAndMealItemAndFood(
+								member.id(),
+								now.minusDays(6).atStartOfDay(),
+								now.atTime(LocalTime.MAX)
+						).stream()
+						.map(BloodSugarWithMealWithMealItemWithFoodDto::from)
+						.toList();
+		String prompt = promptBuilder.build(member, records);
+		return geminiClient.generateContent(prompt);
 	}
 }
