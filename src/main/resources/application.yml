@@ -10,3 +10,8 @@ food:
   api:
     base-url: ${FOOD_API_BASE_URL}
     service-key: ${FOOD_API_SERVICE_KEY}
+gemini:
+  api:
+    base-url: ${GEMINI_API_URL}
+    key: ${GEMINI_API_KEY}
+

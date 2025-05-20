@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.heady.headyback.ai.service.AiAnalysisService;
+import com.heady.headyback.auth.annotation.Auth;
+import com.heady.headyback.auth.domain.Accessor;
 
 import lombok.RequiredArgsConstructor;
 
@@ -17,8 +19,7 @@ public class AiAnalysisController {
 	private final AiAnalysisService aiAnalysisService;
 
 	@GetMapping
-	public ResponseEntity<?> createReport() {
-		aiAnalysisService.analyzeHealth();
-		return null;
+	public ResponseEntity<?> createReport(@Auth Accessor accessor) {
+		return ResponseEntity.ok(aiAnalysisService.analyzeHealth(accessor));
 	}
 }

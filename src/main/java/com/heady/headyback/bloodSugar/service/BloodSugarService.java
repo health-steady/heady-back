@@ -64,7 +64,7 @@ public class BloodSugarService {
 	public List<BloodSugarWithMealDto> getAllByDate(Accessor accessor, LocalDate date) {
 		Member member = memberRepository.findByPublicId(accessor.getPublicId())
 				.orElseThrow(() -> new CustomException(MEMBER_NOT_FOUND));
-		return bloodSugarRepository.findAllByMemberIdAndMeasuredAtBetween(
+		return bloodSugarRepository.findByMemberAndPeriodWithMealAndMealItem(
 						member.getId(),
 						date.atStartOfDay(),
 						date.plusDays(1).atStartOfDay()
@@ -78,7 +78,7 @@ public class BloodSugarService {
 	public List<BloodSugarDto> getByDate(Accessor accessor, LocalDate date) {
 		Member member = memberRepository.findByPublicId(accessor.getPublicId())
 				.orElseThrow(() -> new CustomException(MEMBER_NOT_FOUND));
-		return bloodSugarRepository.findByMemberIdAndMeasuredAtBetween(
+		return bloodSugarRepository.findByMemberAndPeriod(
 						member.getId(),
 						date.atStartOfDay(),
 						date.plusDays(1).atStartOfDay()
@@ -92,7 +92,7 @@ public class BloodSugarService {
 	public BloodSugarSummaryDto getSummaryByDate(Accessor accessor, LocalDate date) {
 		Member member = memberRepository.findByPublicId(accessor.getPublicId())
 				.orElseThrow(() -> new CustomException(MEMBER_NOT_FOUND));
-		return bloodSugarRepository.findSummaryByMemberIdAndMeasuredAtBetween(
+		return bloodSugarRepository.summarizeByMemberAndPeriod(
 				member.getId(),
 				date.atStartOfDay(),
 				date.plusDays(1).atStartOfDay()

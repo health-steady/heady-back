@@ -25,14 +25,14 @@ import reactor.core.publisher.Mono;
 @RequiredArgsConstructor
 public class GeminiClient {
 
-	private static final String BASE_URL =
-			"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent";
-
-	private final WebClient.Builder webClientBuilder;
-	private final ObjectMapper objectMapper;
+	@Value("${gemini.api.base-url}")
+	private String BASE_URL;
 
 	@Value("${gemini.api.key}")
 	private String apiKey;
+
+	private final WebClient.Builder webClientBuilder;
+	private final ObjectMapper objectMapper;
 
 	/**
 	 * 동기 방식으로 Gemini API를 호출하고, 첫 번째 응답 파트를 텍스트로 반환합니다.

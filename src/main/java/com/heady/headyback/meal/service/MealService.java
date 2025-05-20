@@ -79,7 +79,7 @@ public class MealService {
 		LocalDateTime end = date.atTime(LocalTime.MAX);
 
 		bloodSugarRepository
-				.findByMemberIdAndMealTypeAndMeasuredAtBetween(
+				.findByMemberAndMealTypeAndPeriod(
 						memberId,
 						meal.getMealType(),
 						start,
