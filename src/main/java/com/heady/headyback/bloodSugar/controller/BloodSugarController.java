@@ -27,7 +27,7 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/bloodSugars/v1")
+@RequestMapping("/api/blood-sugars/v1")
 public class BloodSugarController {
 
 	private final BloodSugarService bloodSugarService;
