@@ -12,6 +12,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import com.heady.headyback.bloodSugar.domain.BloodSugar;
 import com.heady.headyback.meal.domain.enumerated.MealType;
 import com.heady.headyback.member.domain.Member;
 
@@ -66,6 +67,9 @@ public class Meal {
 	@OneToMany(mappedBy = "meal", cascade = CascadeType.ALL)
 	private List<MealItem> mealItems = new ArrayList<>();
 
+	@OneToMany(mappedBy = "meal")
+	private List<BloodSugar> bloodSugars = new ArrayList<>();
+
 	public static Meal ofRecord(
 			Member member,
 			MealType mealType,
@@ -98,6 +102,10 @@ public class Meal {
 						defaultIfNull(f.getFat())
 				))
 				.reduce(Nutrient.zero(), Nutrient::add);
+	}
+
+	public boolean isOwnedBy(Member member) {
+		return this.member != null && this.member.getId().equals(member.getId());
 	}
 
 	private static void addMealItem(Meal meal, List<FoodEntry> foodEntries) {

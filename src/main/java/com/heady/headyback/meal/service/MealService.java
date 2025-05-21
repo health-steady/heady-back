@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.heady.headyback.auth.domain.Accessor;
+import com.heady.headyback.bloodSugar.domain.BloodSugar;
 import com.heady.headyback.bloodSugar.repository.BloodSugarRepository;
 import com.heady.headyback.common.exception.CustomException;
 import com.heady.headyback.meal.domain.Food;
@@ -75,6 +76,20 @@ public class MealService {
 						)
 				)
 		);
+	}
+
+	@Transactional
+	public void deleteMeal(Accessor accessor, Long mealId) {
+		Member member = memberRepository.findByPublicId(accessor.getPublicId())
+				.orElseThrow(() -> new CustomException(MEMBER_NOT_FOUND));
+		Meal meal = mealRepository.findById(mealId)
+				.orElseThrow(() -> new CustomException(MEAL_NOT_FOUND));
+		if (!meal.isOwnedBy(member)) {
+			throw new CustomException(NO_AUTHORIZATION);
+		}
+
+		meal.getBloodSugars().forEach(BloodSugar::deleteMeal);
+		mealRepository.delete(meal);
 	}
 
 	private void assignMealToBloodSugars(Long memberId, Meal meal) {

@@ -88,4 +88,8 @@ public class BloodSugar {
 	public void assignToMeal(Meal meal) {
 		this.meal = meal;
 	}
+
+	public void deleteMeal() {
+		this.meal = null;
+	}
 }
