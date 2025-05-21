@@ -39,4 +39,11 @@ public interface MealRepository extends JpaRepository<Meal, Long> {
 			@Param("start") LocalDateTime start,
 			@Param("end") LocalDateTime end
 	);
+
+	boolean existsByMemberIdAndMealTypeAndMealDateTimeBetween(
+			Long memberId,
+			MealType mealType,
+			LocalDateTime startOfDay,
+			LocalDateTime endOfDay
+	);
 }

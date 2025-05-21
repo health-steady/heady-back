@@ -1,5 +1,6 @@
 package com.heady.headyback.meal.service;
 
+import static com.heady.headyback.meal.exception.MealExceptionCode.*;
 import static com.heady.headyback.member.exception.MemberExceptionCode.*;
 
 import java.time.LocalDate;
@@ -40,16 +41,17 @@ public class MealService {
 	private final BloodSugarRepository bloodSugarRepository;
 	private final FoodRepository foodRepository;
 
-	// TODO : 식사 타입 이미 존재 확인 아침, 점심, 저녁 각 1번씩
-	// TODO : 간식은 어떻게?? 혈당이랑 매칭 어떻게? 혈당 등록할 때 API로 식사 목록을 가져오고 선택지를 주기?
 	@Transactional
 	public MealDto recordMeal(Accessor accessor, MealRequest request) {
 		Member member = memberRepository.findByPublicId(accessor.getPublicId())
 				.orElseThrow(() -> new CustomException(MEMBER_NOT_FOUND));
 
+		MealType mealType = MealType.getMappedMealType(request.mealType());
+		validateDuplicateMeal(member.getId(), mealType, request.mealDateTime());
+
 		Meal meal = Meal.ofRecord(
 				member,
-				MealType.getMappedMealType(request.mealType()),
+				mealType,
 				request.mealDateTime(),
 				getFoodEntries(request.foods()),
 				request.memo()
@@ -91,8 +93,25 @@ public class MealService {
 				.forEach(bloodSugar -> bloodSugar.assignToMeal(meal));
 	}
 
+	private void validateDuplicateMeal(
+			Long memberId,
+			MealType mealType,
+			LocalDateTime mealDateTime
+	) {
+		LocalDate date = mealDateTime.toLocalDate();
+		LocalDateTime startOfDay = date.atStartOfDay();
+		LocalDateTime endOfDay = date.atTime(LocalTime.MAX);
+
+		boolean alreadyExists = mealRepository.existsByMemberIdAndMealTypeAndMealDateTimeBetween(
+				memberId, mealType, startOfDay, endOfDay
+		);
+
+		if (alreadyExists) {
+			throw new CustomException(MEAL_ALREADY_RECORDED);
+		}
+	}
+
 	private Nutrient summaryNutrient(List<Meal> meals) {
-		log.info(meals.size()+"사이즈");
 		return meals.stream()
 				.map(Meal::calculateTotalNutrient)
 				.reduce(Nutrient.zero(), Nutrient::add);
