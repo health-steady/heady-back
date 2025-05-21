@@ -43,7 +43,7 @@ public class MealService {
 	// TODO : 식사 타입 이미 존재 확인 아침, 점심, 저녁 각 1번씩
 	// TODO : 간식은 어떻게?? 혈당이랑 매칭 어떻게? 혈당 등록할 때 API로 식사 목록을 가져오고 선택지를 주기?
 	@Transactional
-	public MealDto save(Accessor accessor, MealRequest request) {
+	public MealDto recordMeal(Accessor accessor, MealRequest request) {
 		Member member = memberRepository.findByPublicId(accessor.getPublicId())
 				.orElseThrow(() -> new CustomException(MEMBER_NOT_FOUND));
 

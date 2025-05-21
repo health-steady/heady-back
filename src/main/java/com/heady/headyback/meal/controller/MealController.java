@@ -36,7 +36,7 @@ public class MealController {
 
 		return ResponseEntity.ok().body(
 				MealResponse.of(
-						mealService.save(accessor, request)
+						mealService.recordMeal(accessor, request)
 				)
 		);
 	}

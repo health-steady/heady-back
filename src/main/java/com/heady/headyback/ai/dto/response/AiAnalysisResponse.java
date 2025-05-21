@@ -15,9 +15,7 @@ public record AiAnalysisResponse(
 		String dietAnalysis,
 		List<String> recommendedActionPlan
 ) {
-	public static AiAnalysisResponse from(
-			AiAnalysisDto aiAnalysisDto
-	) {
+	public static AiAnalysisResponse from(AiAnalysisDto aiAnalysisDto) {
 		return new AiAnalysisResponse(
 				MemberResponse.of(aiAnalysisDto.memberDto()),
 				aiAnalysisDto.bloodSugarWithMealDtos().stream()
