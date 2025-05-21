@@ -2,7 +2,6 @@ package com.heady.headyback.meal.service;
 
 import static com.heady.headyback.member.exception.MemberExceptionCode.*;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -29,7 +28,9 @@ import com.heady.headyback.member.domain.Member;
 import com.heady.headyback.member.repository.MemberRepository;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class MealService {
@@ -91,29 +92,19 @@ public class MealService {
 	}
 
 	private Nutrient summaryNutrient(List<Meal> meals) {
-		BigDecimal totalCarb = BigDecimal.ZERO;
-		BigDecimal totalProtein = BigDecimal.ZERO;
-		BigDecimal totalFat = BigDecimal.ZERO;
-
-		for (Meal meal : meals) {
-			Nutrient n = meal.calculateTotalNutrient();
-			totalCarb = totalCarb.add(n.carbohydrate());
-			totalProtein = totalProtein.add(n.protein());
-			totalFat = totalFat.add(n.fat());
-		}
-
-		return Nutrient.of(totalCarb, totalProtein, totalFat);
+		log.info(meals.size()+"사이즈");
+		return meals.stream()
+				.map(Meal::calculateTotalNutrient)
+				.reduce(Nutrient.zero(), Nutrient::add);
 	}
 
 	private List<FoodEntry> getFoodEntries(List<FoodInfo> foods) {
 		return foods.stream()
 				.map(fi -> {
 					if (fi.code() != null && !fi.code().isBlank()) {
-						// DB에 있는 음식이면 실제 조회
 						Food food = foodRepository.getReferenceById(fi.code());
 						return FoodEntry.of(food, food.getName());
 					} else {
-						// 직접 입력한 음식
 						return FoodEntry.of(null, fi.name());
 					}
 				})

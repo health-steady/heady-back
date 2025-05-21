@@ -5,6 +5,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -27,15 +29,18 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 @Table(name = "meals")
 @Entity
 @Getter
 @EntityListeners(AuditingEntityListener.class)
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Meal {
 
 	@Id
+	@EqualsAndHashCode.Include
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
@@ -81,6 +86,12 @@ public class Meal {
 		return mealItems.stream()
 				.map(MealItem::getFood)
 				.filter(Objects::nonNull)
+				.collect(Collectors.toMap(
+						Food::getCode,
+						Function.identity(),
+						(existing, duplicate) -> existing
+				))
+				.values().stream()
 				.map(f -> Nutrient.of(
 						defaultIfNull(f.getCarbohydrates()),
 						defaultIfNull(f.getProtein()),

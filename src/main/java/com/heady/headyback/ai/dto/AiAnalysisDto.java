@@ -5,7 +5,6 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.heady.headyback.bloodSugar.dto.BloodSugarWithMealDto;
-import com.heady.headyback.meal.dto.NutrientSummaryDto;
 import com.heady.headyback.member.dto.MemberDto;
 
 public record AiAnalysisDto(
@@ -14,7 +13,7 @@ public record AiAnalysisDto(
 		@JsonProperty("recommendedActionPlan") List<String> recommendedActionPlan,
 		MemberDto memberDto,
 		List<BloodSugarWithMealDto> bloodSugarWithMealDtos,
-		List<NutrientSummaryDto> nutrientSummaryDtos
+		List<DailyNutrient> dailyNutrients
 ) {
 	@JsonCreator
 	public AiAnalysisDto {
@@ -24,7 +23,7 @@ public record AiAnalysisDto(
 			AiAnalysisDto aiAnalysisDto,
 			MemberDto memberDto,
 			List<BloodSugarWithMealDto> bloodSugarWithMealDtos,
-			List<NutrientSummaryDto> nutrientSummaryDtos
+			List<DailyNutrient> dailyNutrients
 	) {
 		return new AiAnalysisDto(
 				aiAnalysisDto.bloodSugarAnalysis(),
@@ -32,7 +31,7 @@ public record AiAnalysisDto(
 				aiAnalysisDto.recommendedActionPlan(),
 				memberDto,
 				bloodSugarWithMealDtos,
-				nutrientSummaryDtos
+				dailyNutrients
 		);
 	}
 }

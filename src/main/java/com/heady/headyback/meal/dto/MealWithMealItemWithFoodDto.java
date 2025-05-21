@@ -2,6 +2,7 @@ package com.heady.headyback.meal.dto;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.heady.headyback.meal.domain.Meal;
@@ -12,7 +13,7 @@ public record MealWithMealItemWithFoodDto(
 		MealType mealType,
 		LocalDateTime mealDateTime,
 		String memo,
-		List<MealItemWithFoodDto> mealItemWithFoodDtos
+		Set<MealItemWithFoodDto> mealItemWithFoodDtos
 ) {
 	public static MealWithMealItemWithFoodDto of(Meal meal) {
 		return new MealWithMealItemWithFoodDto(
@@ -22,7 +23,7 @@ public record MealWithMealItemWithFoodDto(
 				meal.getMemo(),
 				meal.getMealItems().stream()
 						.map(MealItemWithFoodDto::from)
-						.collect(Collectors.toList())
+						.collect(Collectors.toSet())
 		);
 	}
 
