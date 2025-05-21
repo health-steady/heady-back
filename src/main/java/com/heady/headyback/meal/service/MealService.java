@@ -63,6 +63,7 @@ public class MealService {
 				.orElseThrow(() -> new CustomException(MEMBER_NOT_FOUND));
 
 		return NutrientSummaryDto.of(
+				date,
 				summaryNutrient(
 						mealRepository.findByMemberIdAndMealDateTimeBetween(
 								member.getId(),
