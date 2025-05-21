@@ -7,9 +7,6 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/**
- * Gemini generateContent 호출용 요청 DTO
- */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public record ContentRequest(
 		List<Content> contents,

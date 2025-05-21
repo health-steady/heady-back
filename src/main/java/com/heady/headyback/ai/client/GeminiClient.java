@@ -15,7 +15,7 @@ import org.springframework.web.reactive.function.client.WebClientResponseExcepti
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.heady.headyback.ai.dto.request.ContentRequest;
-import com.heady.headyback.ai.dto.response.AiAnalysisResponse;
+import com.heady.headyback.ai.dto.AiAnalysisDto;
 import com.heady.headyback.ai.dto.response.GeminiResponse;
 
 import lombok.RequiredArgsConstructor;
@@ -40,7 +40,7 @@ public class GeminiClient {
 	 * 동기 방식으로 JSON 스키마를 이용해 Gemini API를 호출하고,
 	 * 첫 번째 응답 파트를 텍스트로 반환합니다.
 	 */
-	public AiAnalysisResponse generateContent(String prompt) {
+	public AiAnalysisDto generateContent(String prompt) {
 		// 1) contents
 		var content = new ContentRequest.Content(
 				List.of(new ContentRequest.Part(prompt))
@@ -128,7 +128,7 @@ public class GeminiClient {
 				.text();
 
 		try {
-			return objectMapper.readValue(result, AiAnalysisResponse.class);
+			return objectMapper.readValue(result, AiAnalysisDto.class);
 		} catch (JsonProcessingException e) {
 			log.error("분석 응답 파싱 실패: {}", result, e);
 			throw new RuntimeException("Gemini 분석 응답 파싱 실패", e);

@@ -9,7 +9,7 @@ public record FoodResponse(
 		String name,
 		BigDecimal calories
 ) {
-	public static FoodResponse of(FoodDto foodDto) {
+	public static FoodResponse from(FoodDto foodDto) {
 		return new FoodResponse(foodDto.code(), foodDto.name(), foodDto.calories());
 	}
 }
