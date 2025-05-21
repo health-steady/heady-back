@@ -92,4 +92,8 @@ public class BloodSugar {
 	public void deleteMeal() {
 		this.meal = null;
 	}
+
+	public boolean isOwnedBy(Member member) {
+		return this.member != null && this.member.getId().equals(member.getId());
+	}
 }

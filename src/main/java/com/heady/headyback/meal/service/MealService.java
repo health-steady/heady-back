@@ -84,8 +84,9 @@ public class MealService {
 				.orElseThrow(() -> new CustomException(MEMBER_NOT_FOUND));
 		Meal meal = mealRepository.findById(mealId)
 				.orElseThrow(() -> new CustomException(MEAL_NOT_FOUND));
+
 		if (!meal.isOwnedBy(member)) {
-			throw new CustomException(NO_AUTHORIZATION);
+			throw new CustomException(MEAL_NO_AUTHORIZED);
 		}
 
 		meal.getBloodSugars().forEach(BloodSugar::deleteMeal);

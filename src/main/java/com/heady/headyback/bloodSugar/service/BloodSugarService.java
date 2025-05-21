@@ -1,5 +1,6 @@
 package com.heady.headyback.bloodSugar.service;
 
+import static com.heady.headyback.bloodSugar.exception.BloodSugarExceptionCode.*;
 import static com.heady.headyback.member.exception.MemberExceptionCode.*;
 
 import java.time.LocalDate;
@@ -14,8 +15,8 @@ import com.heady.headyback.auth.domain.Accessor;
 import com.heady.headyback.bloodSugar.domain.BloodSugar;
 import com.heady.headyback.bloodSugar.domain.enumerated.MeasureType;
 import com.heady.headyback.bloodSugar.dto.BloodSugarDto;
-import com.heady.headyback.bloodSugar.dto.BloodSugarWithMealDto;
 import com.heady.headyback.bloodSugar.dto.BloodSugarSummaryDto;
+import com.heady.headyback.bloodSugar.dto.BloodSugarWithMealDto;
 import com.heady.headyback.bloodSugar.dto.request.BloodSugarRequest;
 import com.heady.headyback.bloodSugar.repository.BloodSugarRepository;
 import com.heady.headyback.common.exception.CustomException;
@@ -97,6 +98,20 @@ public class BloodSugarService {
 				date.atStartOfDay(),
 				date.plusDays(1).atStartOfDay()
 		);
+	}
+
+	@Transactional
+	public void delete(Accessor accessor, Long bloodSugarId) {
+		Member member = memberRepository.findByPublicId(accessor.getPublicId())
+				.orElseThrow(() -> new CustomException(MEMBER_NOT_FOUND));
+		BloodSugar bloodSugar = bloodSugarRepository.findById(bloodSugarId)
+				.orElseThrow(() -> new CustomException(BLOOD_SUGAR_NOT_FOUND));
+
+		if (!bloodSugar.isOwnedBy(member)) {
+			throw new CustomException(BLOOD_SUGAR_NO_AUTHORIZED);
+		}
+
+		bloodSugarRepository.delete(bloodSugar);
 	}
 
 	//TODO : null 처리

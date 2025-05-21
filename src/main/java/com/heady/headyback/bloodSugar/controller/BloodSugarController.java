@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -81,5 +82,14 @@ public class BloodSugarController {
 		return ResponseEntity.ok().body(
 				bloodSugarService.getSummaryByDate(accessor, date)
 		);
+	}
+
+	@DeleteMapping("{id}")
+	public ResponseEntity<?> delete(
+			@Auth Accessor accessor,
+			@PathVariable("id") Long id
+	) {
+		bloodSugarService.delete(accessor, id);
+		return ResponseEntity.noContent().build();
 	}
 }

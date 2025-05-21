@@ -59,7 +59,7 @@ public class MealController {
 	@DeleteMapping("{id}")
 	public ResponseEntity<Void> deleteMeal(
 			@Auth Accessor accessor,
-			@PathVariable Long id
+			@PathVariable("id") Long id
 	) {
 		mealService.deleteMeal(accessor, id);
 		return ResponseEntity.noContent().build();
