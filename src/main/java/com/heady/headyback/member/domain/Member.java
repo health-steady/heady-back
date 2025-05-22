@@ -53,7 +53,6 @@ public class Member {
 	@Column(nullable = false)
 	private String name;
 
-	// TODO : 랜덤으로 만들기
 	@Column(nullable = false)
 	private String nickname = "unknown";
 
@@ -108,6 +107,31 @@ public class Member {
 		member.assignAverageHeightAndWeight();
 		member.target = Target.ofCreate(member);
 		return member;
+	}
+
+	public Member update(
+			String name,
+			BigDecimal height,
+			BigDecimal weight,
+			Integer fastingBloodSugar,
+			Integer postprandialBloodSugar,
+			BigDecimal carbohydrate,
+			BigDecimal protein,
+			BigDecimal fat,
+			Integer calories
+	) {
+		this.name = name;
+		this.height = height;
+		this.weight = weight;
+		this.target.update(
+				fastingBloodSugar,
+				postprandialBloodSugar,
+				carbohydrate,
+				protein,
+				fat,
+				calories
+		);
+		return this;
 	}
 
 	public boolean isMale() {

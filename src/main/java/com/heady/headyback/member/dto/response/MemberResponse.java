@@ -13,13 +13,14 @@ public record MemberResponse(
 		String name,
 		String nickname,
 		LocalDate birthdate,
+		String gender,
 		BigDecimal height,
 		BigDecimal weight,
 		String profileImageUrl,
 		LocalDateTime createdAt,
 		LocalDateTime updatedAt
 ) {
-	public static MemberResponse of(MemberDto memberDto) {
+	public static MemberResponse from(MemberDto memberDto) {
 		return new MemberResponse(
 				memberDto.id(),
 				TargetResponse.of(memberDto.targetDto()),
@@ -27,6 +28,7 @@ public record MemberResponse(
 				memberDto.name(),
 				memberDto.nickname(),
 				memberDto.birthdate(),
+				memberDto.gender(),
 				memberDto.height(),
 				memberDto.weight(),
 				memberDto.profileImageUrl(),

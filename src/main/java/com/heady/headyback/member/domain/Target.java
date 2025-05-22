@@ -67,6 +67,22 @@ public class Target {
 		return target;
 	}
 
+	public void update(
+			Integer fastingBloodSugar,
+			Integer postprandialBloodSugar,
+			BigDecimal carbohydrate,
+			BigDecimal protein,
+			BigDecimal fat,
+			Integer calories
+	) {
+		this.fastingBloodSugar = fastingBloodSugar;
+		this.postprandialBloodSugar = postprandialBloodSugar;
+		this.carbohydrate = carbohydrate;
+		this.protein = protein;
+		this.fat = fat;
+		this.calories = calories;
+	}
+
 	private void assignNutritionTargets() {
 		BigDecimal height = member.getHeight();
 		BigDecimal weight = member.getWeight();

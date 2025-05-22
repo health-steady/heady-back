@@ -13,13 +13,14 @@ public record MemberDto(
 		String name,
 		String nickname,
 		LocalDate birthdate,
+		String gender,
 		BigDecimal height,
 		BigDecimal weight,
 		String profileImageUrl,
 		LocalDateTime createdAt,
 		LocalDateTime updatedAt
 ) {
-	public static MemberDto of(Member member) {
+	public static MemberDto from(Member member) {
 		return new MemberDto(
 				member.getId(),
 				TargetDto.of(member.getTarget()),
@@ -27,6 +28,7 @@ public record MemberDto(
 				member.getName(),
 				member.getNickname(),
 				member.getBirthdate(),
+				member.getGender().getTitle(),
 				member.getHeight(),
 				member.getWeight(),
 				member.getProfileImageUrl(),

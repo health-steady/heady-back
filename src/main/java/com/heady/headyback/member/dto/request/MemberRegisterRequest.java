@@ -5,7 +5,7 @@ import com.heady.headyback.member.exception.MemberErrorMessage;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 
-public record RegisterRequest(
+public record MemberRegisterRequest(
 		// TODO : validation
 		@Email
 		@NotBlank(message = MemberErrorMessage.EMAIL_NOT_BLANK)

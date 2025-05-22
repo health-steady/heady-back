@@ -43,7 +43,7 @@ public class AiAnalysisService {
 
 	public AiAnalysisDto analyzeHealth(Accessor accessor) {
 		MemberDto member = memberRepository.findByPublicId(accessor.getPublicId())
-				.map(MemberDto::of)
+				.map(MemberDto::from)
 				.orElseThrow(() -> new CustomException(MEMBER_NOT_FOUND));
 
 		LocalDate now = LocalDate.now();

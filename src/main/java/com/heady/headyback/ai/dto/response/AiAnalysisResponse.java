@@ -17,7 +17,7 @@ public record AiAnalysisResponse(
 ) {
 	public static AiAnalysisResponse from(AiAnalysisDto aiAnalysisDto) {
 		return new AiAnalysisResponse(
-				MemberResponse.of(aiAnalysisDto.memberDto()),
+				MemberResponse.from(aiAnalysisDto.memberDto()),
 				aiAnalysisDto.bloodSugarWithMealDtos().stream()
 						.map(BloodSugarWithMealResponse::from)
 						.toList(),

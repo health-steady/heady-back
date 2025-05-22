@@ -10,7 +10,8 @@ import com.heady.headyback.common.exception.CustomException;
 import com.heady.headyback.member.domain.Email;
 import com.heady.headyback.member.domain.Member;
 import com.heady.headyback.member.dto.MemberDto;
-import com.heady.headyback.member.dto.request.RegisterRequest;
+import com.heady.headyback.member.dto.request.MemberRegisterRequest;
+import com.heady.headyback.member.dto.request.MemberUpdateRequest;
 import com.heady.headyback.member.repository.MemberRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -23,7 +24,7 @@ public class MemberDomainService {
 
 	// TODO : 이메일 인증
 	@Transactional
-	public Long register(RegisterRequest request) {
+	public Long register(MemberRegisterRequest request) {
 		Email email = Email.ofCreate(request.email());
 		checkDuplicationEmail(email);
 		return memberRepository.save(
@@ -40,8 +41,27 @@ public class MemberDomainService {
 
 	@Transactional(readOnly = true)
 	public MemberDto get(Accessor accessor) {
-		return MemberDto.of(memberRepository.findByPublicId(accessor.getPublicId())
+		return MemberDto.from(memberRepository.findByPublicId(accessor.getPublicId())
 				.orElseThrow(() -> new CustomException(MEMBER_NOT_FOUND))
+		);
+	}
+
+	@Transactional
+	public MemberDto update(Accessor accessor, MemberUpdateRequest request) {
+		Member member = memberRepository.findByPublicId(accessor.getPublicId())
+				.orElseThrow(() -> new CustomException(MEMBER_NOT_FOUND));
+		return MemberDto.from(
+				member.update(
+						request.name(),
+						request.height(),
+						request.weight(),
+						request.fastingBloodSugar(),
+						request.postprandialBloodSugar(),
+						request.carbohydrate(),
+						request.protein(),
+						request.fat(),
+						request.calories()
+				)
 		);
 	}
 
@@ -50,5 +70,4 @@ public class MemberDomainService {
 			throw new CustomException(EMAIL_ALREADY_USED);
 		}
 	}
-
 }
