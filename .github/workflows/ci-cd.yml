@@ -24,7 +24,7 @@ jobs:
 
       - name: Build with Gradle
         env:
-          SPRING_PROFILES_ACTIVE: prod
+          ACTIVE_MODE: prod
           JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY }}
           DB_URL: ${{ secrets.DB_URL }}
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
