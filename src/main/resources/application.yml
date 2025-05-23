@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: local
+    active: prod
 
 jwt:
   secret-key: ${JWT_SECRET_KEY}
