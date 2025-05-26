@@ -8,11 +8,11 @@ services:
     environment:
       TZ: Asia/Seoul
       ACTIVE_MODE: prod
-      JWT_SECRET_KEY: ${secrets.JWT_SECRET_KEY}
-      DB_URL: ${secrets.DB_URL}
-      DB_PASSWORD: ${secrets.DB_PASSWORD}
-      DB_USERNAME: ${secrets.DB_USERNAME}
-      FOOD_API_BASE_URL: ${secrets.FOOD_API_BASE_URL}
-      FOOD_API_SERVICE_KEY: ${secrets.FOOD_API_SERVICE_KEY}
-      GEMINI_API_URL: ${secrets.GEMINI_API_URL}
-      GEMINI_API_KEY: ${secrets.GEMINI_API_KEY}
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY}
+      DB_URL: ${DB_URL}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_USERNAME: ${DB_USERNAME}
+      FOOD_API_BASE_URL: ${FOOD_API_BASE_URL}
+      FOOD_API_SERVICE_KEY: ${FOOD_API_SERVICE_KEY}
+      GEMINI_API_URL: ${GEMINI_API_URL}
+      GEMINI_API_KEY: ${GEMINI_API_KEY}
