@@ -10,6 +10,7 @@ import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.heady.headyback.bloodSugar.domain.BloodSugar;
 import com.heady.headyback.bloodSugar.domain.enumerated.MeasureType;
@@ -36,6 +37,7 @@ public class MockDataService {
 	private final BloodSugarRepository bloodSugarRepository;
 	private static final Random RANDOM = new Random();
 
+	@Transactional
 	public void insertMockDataForToday() {
 		Member member = memberRepository.findById(1L)
 				.orElseThrow(() -> new CustomException(MEMBER_NOT_FOUND));
