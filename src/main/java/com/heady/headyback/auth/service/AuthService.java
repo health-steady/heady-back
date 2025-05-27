@@ -37,10 +37,6 @@ public class AuthService {
 		OauthProvider provider = oauthProviders.getProvider(request.socialProvider());
 		String accessToken = provider.getAccessToken(request.code());
 		OauthUserInfo userInfo = provider.getUserInfo(accessToken);
-		log.info("accessToken: {}", accessToken);
-		log.info("Requesting getSocialId from: {}", userInfo.getSocialId());
-		log.info("Requesting getEmail from: {}", userInfo.getEmail());
-		log.info("Requesting getNickName from: {}", userInfo.getNickName());
 		return oauthLoginProcess(
 				userInfo,
 				request.socialProvider()
