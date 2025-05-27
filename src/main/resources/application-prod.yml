@@ -14,7 +14,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
     defer-datasource-initialization: true
     show-sql: true
     properties:
@@ -27,7 +27,7 @@ spring:
         order_updates: true
   sql:
     init:
-      mode: always
+      mode: never
       data-locations: classpath:data-local.sql
 
 oauth:
