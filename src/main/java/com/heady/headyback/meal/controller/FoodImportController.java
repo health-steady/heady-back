@@ -17,7 +17,6 @@ public class FoodImportController {
 	private final FoodImportService foodImportService;
 
 	/**
-	 * POST
 	 * @return 저장된 총 Food 건수
 	 */
 	@PostMapping
