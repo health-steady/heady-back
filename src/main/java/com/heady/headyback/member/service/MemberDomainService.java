@@ -53,6 +53,8 @@ public class MemberDomainService {
 		return MemberDto.from(
 				member.update(
 						request.name(),
+						request.gender(),
+						request.birthDate(),
 						request.height(),
 						request.weight(),
 						request.fastingBloodSugar(),

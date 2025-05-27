@@ -140,6 +140,8 @@ public class Member {
 
 	public Member update(
 			String name,
+			Gender gender,
+			LocalDate birthdate,
 			BigDecimal height,
 			BigDecimal weight,
 			Integer fastingBloodSugar,
@@ -150,6 +152,8 @@ public class Member {
 			Integer calories
 	) {
 		this.name = name;
+		this.gender = gender;
+		this.birthdate = birthdate;
 		this.height = height;
 		this.weight = weight;
 		this.target.update(
