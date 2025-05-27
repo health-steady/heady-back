@@ -1,9 +1,13 @@
 package com.heady.headyback.member.domain;
 
+import static com.heady.headyback.member.domain.enumerated.Gender.*;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.Period;
 import java.time.format.DateTimeFormatter;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.data.annotation.CreatedDate;
@@ -12,6 +16,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import com.heady.headyback.member.domain.enumerated.Gender;
 import com.heady.headyback.member.domain.enumerated.Role;
+import com.heady.headyback.member.domain.enumerated.SocialProvider;
 import com.heady.headyback.member.domain.enumerated.Status;
 
 import jakarta.persistence.CascadeType;
@@ -53,13 +58,20 @@ public class Member {
 	@Column(nullable = false)
 	private String name;
 
+	@Column(length = 50)
+	@Enumerated(value = EnumType.STRING)
+	private SocialProvider socialProvider;
+
+	@Column(unique = true)
+	private String socialId;
+
 	@Column(nullable = false)
 	private String nickname = "unknown";
 
-	@Column(nullable = false)
+	@Column
 	private LocalDate birthdate;
 
-	@Column(nullable = false)
+	@Column
 	@Enumerated(value = EnumType.STRING)
 	private Gender gender;
 
@@ -109,6 +121,23 @@ public class Member {
 		return member;
 	}
 
+	public static Member signUpWithOauth(
+			String email,
+			String name,
+			SocialProvider socialProvider,
+			String socialId
+	) {
+		Member member = new Member();
+		member.email = Email.ofCreate(email);
+		member.name = name;
+		member.socialProvider = socialProvider;
+		member.socialId = socialId;
+		member.gender = PRIVATE;
+		member.assignAverageHeightAndWeight();
+		member.target = Target.ofCreate(member);
+		return member;
+	}
+
 	public Member update(
 			String name,
 			BigDecimal height,
@@ -135,11 +164,13 @@ public class Member {
 	}
 
 	public boolean isMale() {
-		return gender == Gender.MALE;
+		return gender == MALE;
 	}
 
 	private void assignAverageHeightAndWeight() {
-		int age = LocalDate.now().getYear() - this.birthdate.getYear();
+		int age = Optional.ofNullable(this.birthdate)
+				.map(d -> Period.between(d, LocalDate.now()).getYears())
+				.orElse(25);
 		AverageBodyInfo.Body body = AverageBodyInfo.getAverage(this.gender, age);
 		height = body.getHeight();
 		weight = body.getWeight();

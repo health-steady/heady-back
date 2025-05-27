@@ -2,6 +2,8 @@ package com.heady.headyback.auth.domain;
 
 import java.util.UUID;
 
+import com.heady.headyback.auth.domain.enumerated.Authority;
+
 import lombok.Getter;
 
 @Getter

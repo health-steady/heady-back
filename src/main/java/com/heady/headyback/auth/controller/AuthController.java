@@ -9,7 +9,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.heady.headyback.auth.dto.AuthTokenDto;
 import com.heady.headyback.auth.dto.request.LoginRequest;
+import com.heady.headyback.auth.dto.request.OauthLoginRequest;
 import com.heady.headyback.auth.dto.response.LoginResponse;
+import com.heady.headyback.auth.dto.response.OauthLoginResponse;
 import com.heady.headyback.auth.service.AuthService;
 
 import jakarta.validation.Valid;
@@ -33,5 +35,16 @@ public class AuthController {
 		return ResponseEntity.ok()
 				.header(HttpHeaders.SET_COOKIE, token.refreshToken())
 				.body(LoginResponse.of(token.accessToken()));
+	}
+
+	@PostMapping("/oauth")
+	public ResponseEntity<OauthLoginResponse> oauthLogin(
+			@RequestBody OauthLoginRequest request
+	) {
+		return ResponseEntity.ok().body(
+				OauthLoginResponse.of(
+						authService.oauthLogin(request), request.authority()
+				)
+		);
 	}
 }

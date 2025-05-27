@@ -5,6 +5,8 @@ import static com.heady.headyback.member.constant.NutritionConstants.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.Period;
+import java.util.Optional;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -119,7 +121,9 @@ public class Target {
 	}
 
 	private int calculateAge(LocalDate birthdate) {
-		return LocalDate.now().getYear() - birthdate.getYear();
+		return Optional.ofNullable(birthdate)
+				.map(d -> Period.between(d, LocalDate.now()).getYears())
+				.orElse(25);
 	}
 
 	private BigDecimal kcalToGrams(BigDecimal kcal, int kcalPerGram) {

@@ -32,6 +32,7 @@ public class AverageBodyInfo {
 
 		DATA.put(Gender.MALE, Collections.unmodifiableMap(maleData));
 		DATA.put(Gender.FEMALE, Collections.unmodifiableMap(femaleData));
+		DATA.put(Gender.PRIVATE, Collections.unmodifiableMap(maleData));
 	}
 
 	private static Map<AgeGroup, Body> createMaleBodyData() {

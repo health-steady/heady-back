@@ -1,4 +1,4 @@
-package com.heady.headyback.auth.domain;
+package com.heady.headyback.auth.domain.enumerated;
 
 public enum Authority {
 	GUEST,
