@@ -34,6 +34,9 @@ jobs:
           GEMINI_API_URL: ${{ secrets.GEMINI_API_URL }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           KAKAO_CLIENT_ID: ${{ secrets.KAKAO_CLIENT_ID }}
+          GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+          GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
+
         run: ./gradlew clean build
 
       - name: Build Docker image
@@ -78,6 +81,8 @@ jobs:
             GEMINI_API_URL=${{ secrets.GEMINI_API_URL }}
             GEMINI_API_KEY=${{ secrets.GEMINI_API_KEY }}
             KAKAO_CLIENT_ID=${{ secrets.KAKAO_CLIENT_ID }}
+            GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }}
+            GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }}
             EOF
 
             docker compose -f docker-compose-prod.yml pull
