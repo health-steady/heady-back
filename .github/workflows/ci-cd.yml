@@ -36,6 +36,8 @@ jobs:
           KAKAO_CLIENT_ID: ${{ secrets.KAKAO_CLIENT_ID }}
           GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
           GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
+          GF_SECURITY_ADMIN_USER: ${{ secrets.GF_SECURITY_ADMIN_USER }}
+          GF_SECURITY_ADMIN_PASSWORD: ${{ secrets.GF_SECURITY_ADMIN_PASSWORD }}
 
         run: ./gradlew clean build
 
@@ -83,6 +85,15 @@ jobs:
             KAKAO_CLIENT_ID=${{ secrets.KAKAO_CLIENT_ID }}
             GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }}
             GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }}
+            GF_SECURITY_ADMIN_USER=${{ secrets.GF_SECURITY_ADMIN_USER }}
+            GF_SECURITY_ADMIN_PASSWORD=${{ secrets.GF_SECURITY_ADMIN_PASSWORD }}
+            EOF
+            
+            cat <<EOF > mysql-exporter.cnf
+            [client]
+            user=${{ secrets.DB_EXPORTER }}
+            password=${{ secrets.DB_EXPORTER_PASSWORD }}
+            host=${{ secrets.DB_HOST }}
             EOF
 
             docker compose -f docker-compose-prod.yml pull

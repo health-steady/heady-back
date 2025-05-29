@@ -15,3 +15,13 @@ gemini:
     base-url: ${GEMINI_API_URL}
     key: ${GEMINI_API_KEY}
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info, prometheus
+  metrics:
+    enable:
+      jdbc: true
+    tags:
+      application: heady

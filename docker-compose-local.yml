@@ -25,7 +25,7 @@ services:
     ports:
       - "9090:9090"
     volumes:
-      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro  # Prometheus 설정 파일 마운트
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
     #      - prometheus_data:/prometheus
     restart: unless-stopped
     healthcheck:
@@ -40,7 +40,7 @@ services:
     image: grafana/grafana-oss:latest
     container_name: grafana
     ports:
-      - "3001:3000"  # 프론트와 겹치지 않도록 포트 변경
+      - "3001:3000"
     #    volumes:
     #      - grafana_data:/var/lib/grafana
     environment:
