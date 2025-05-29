@@ -96,6 +96,9 @@ jobs:
             host=${{ secrets.DB_HOST }}
             EOF
             
+            [ -d prometheus.yml ] && rm -rf prometheus.yml
+            touch prometheus.yml
+            
             cat <<EOF > prometheus.yml
             global:
               scrape_interval: 15s
