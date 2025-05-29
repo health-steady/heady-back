@@ -13,8 +13,9 @@ services:
       TZ: Asia/Seoul
     ports:
       - "3306:3306"
-#    volumes:
-#      - mysql-data:/var/lib/mysql
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    #      - mysql-data:/var/lib/mysql
     networks:
       - monitoring_net
 
@@ -24,8 +25,8 @@ services:
     ports:
       - "9090:9090"
     volumes:
-      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
-#      - prometheus_data:/prometheus
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro  # Prometheus 설정 파일 마운트
+    #      - prometheus_data:/prometheus
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "wget", "--spider", "-q", "http://localhost:9090/-/healthy"]
@@ -39,9 +40,9 @@ services:
     image: grafana/grafana-oss:latest
     container_name: grafana
     ports:
-      - "3001:3000"
-#    volumes:
-#      - grafana_data:/var/lib/grafana
+      - "3001:3000"  # 프론트와 겹치지 않도록 포트 변경
+    #    volumes:
+    #      - grafana_data:/var/lib/grafana
     environment:
       - GF_SECURITY_ADMIN_USER=admin
       - GF_SECURITY_ADMIN_PASSWORD=admin
@@ -53,6 +54,29 @@ services:
       interval: 30s
       timeout: 10s
       retries: 3
+    networks:
+      - monitoring_net
+
+  node_exporter:
+    image: prom/node-exporter:latest
+    container_name: node_exporter
+    ports:
+      - "9100:9100"  # 서버 리소스(CPU, 메모리, 디스크 등) 모니터링
+    restart: unless-stopped
+    networks:
+      - monitoring_net
+
+
+  mysql_exporter:
+    image: prom/mysqld-exporter
+    container_name: mysql_exporter
+    command:
+      - "--config.my-cnf=/config/.my.cnf"
+    volumes:
+      - ./mysql-exporter.cnf:/config/.my.cnf:ro
+    ports:
+      - "9104:9104"
+    restart: unless-stopped
     networks:
       - monitoring_net
 

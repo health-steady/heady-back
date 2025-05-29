@@ -49,3 +49,8 @@ management:
     web:
       exposure:
         include: health, info, prometheus
+  metrics:
+    enable:
+      jdbc: true
+    tags:
+      application: heady
