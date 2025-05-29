@@ -96,7 +96,7 @@ jobs:
             host=${{ secrets.DB_HOST }}
             EOF
             
-            cat <<EOF > ./prometheus.yml
+            cat <<EOF > prometheus.yml
             global:
               scrape_interval: 15s
               evaluation_interval: 15s
