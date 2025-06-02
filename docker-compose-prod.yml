@@ -30,6 +30,7 @@ services:
       - "9090:9090"
     volumes:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_data:/prometheus
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "wget", "--spider", "-q", "http://localhost:9090/-/healthy"]
@@ -47,6 +48,8 @@ services:
     environment:
       - GF_SECURITY_ADMIN_USER=${GF_SECURITY_ADMIN_USER}
       - GF_SECURITY_ADMIN_PASSWORD=${GF_SECURITY_ADMIN_PASSWORD}
+    volumes:
+      - grafana_data:/var/lib/grafana
     restart: unless-stopped
     depends_on:
       - prometheus
@@ -83,3 +86,10 @@ services:
 networks:
   monitoring_net:
     name: monitoring_net
+
+
+volumes:
+  prometheus_data:
+    driver: local
+  grafana_data:
+    driver: local
