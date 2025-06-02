@@ -43,11 +43,3 @@ oauth:
     redirect-uri: http://localhost:3000/auth/google/callback
     token-uri: https://oauth2.googleapis.com/token
     user-info-uri: https://www.googleapis.com/oauth2/v2/userinfo
-
-logging:
-  level:
-    root: INFO
-    com.heady: info
-    org.springframework.web: info
-  pattern:
-    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"

@@ -25,3 +25,11 @@ management:
       jdbc: true
     tags:
       application: heady
+
+logging:
+  level:
+    root: INFO
+    com.heady: info
+    org.springframework.web: info
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
