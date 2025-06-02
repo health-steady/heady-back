@@ -14,9 +14,9 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
     defer-datasource-initialization: true
-    show-sql: true
+    show-sql: false
     properties:
       hibernate:
         format_sql: true
@@ -27,7 +27,7 @@ spring:
         order_updates: true
   sql:
     init:
-      mode: always
+      mode: never
       data-locations: classpath:data-local.sql
 
 oauth:
@@ -43,3 +43,11 @@ oauth:
     redirect-uri: http://localhost:3000/auth/google/callback
     token-uri: https://oauth2.googleapis.com/token
     user-info-uri: https://www.googleapis.com/oauth2/v2/userinfo
+
+logging:
+  level:
+    root: INFO
+    com.heady: info
+    org.springframework.web: info
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
