@@ -11,8 +11,11 @@ import com.heady.headyback.common.exception.CustomException;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
 @Embeddable
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Password {
 
 	private static final Pattern PASSWORD_PATTERN =
@@ -26,6 +29,12 @@ public class Password {
 		validatePasswordPattern(value);
 		Password password = new Password();
 		password.value = encrypt(value);
+		return password;
+	}
+
+	public static Password of(String value) {
+		Password password = new Password();
+		password.value = value;
 		return password;
 	}
 

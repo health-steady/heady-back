@@ -1,6 +1,7 @@
 package com.heady.headyback.auth.jwt;
 
 import java.util.Date;
+import java.util.UUID;
 
 import org.springframework.stereotype.Component;
 
@@ -14,22 +15,22 @@ import lombok.RequiredArgsConstructor;
 public class JwtProvider {
 	private final JwtProperties jwtProperties;
 
-	public String createAccessToken(Member member) {
+	public String createAccessToken(UUID publicId) {
 		long accessTokenExpirationMillis = jwtProperties.getAccessTokenExpirationMillis();
-		return createToken(member, accessTokenExpirationMillis, TokenType.ACCESS_TOKEN);
+		return createToken(publicId, accessTokenExpirationMillis, TokenType.ACCESS_TOKEN);
 	}
 
-	public String createRefreshToken(Member member) {
+	public String createRefreshToken(UUID publicId) {
 		long refreshTokenExpirationMillis = jwtProperties.getRefreshTokenExpirationMillis();
-		return createToken(member, refreshTokenExpirationMillis, TokenType.REFRESH_TOKEN);
+		return createToken(publicId, refreshTokenExpirationMillis, TokenType.REFRESH_TOKEN);
 	}
 
-	private String createToken(Member member, long expirationMillis, TokenType tokenType) {
+	private String createToken(UUID publicId, long expirationMillis, TokenType tokenType) {
 		Date now = new Date();
 		Date expiredDate = new Date(now.getTime() + expirationMillis);
 
 		return Jwts.builder()
-				.setSubject(member.getPublicId().toString())
+				.setSubject(publicId.toString())
 				.setIssuedAt(now)
 				.setExpiration(expiredDate)
 				.claim(JwtProperties.TOKEN_TYPE, tokenType.name())

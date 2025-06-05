@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import com.heady.headyback.member.domain.Email;
 import com.heady.headyback.member.domain.Member;
+import com.heady.headyback.member.dto.MemberLoginDto;
 
 @Repository
 public interface MemberRepository extends JpaRepository<Member, Long> {
@@ -17,8 +18,13 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 	@Query("SELECT EXISTS (SELECT 1 FROM Member m WHERE m.email = :email)")
 	boolean existsByEmail(@Param("email") Email email);
 
-	@Query("SELECT m FROM Member m where m.email = :email and m.isDeleted = false")
-	Optional<Member> findByEmail(@Param("email") Email email);
+	@Query("""
+			    SELECT new com.heady.headyback.member.dto.MemberLoginDto(m.publicId, m.password.value)
+			    FROM Member m
+			    WHERE m.email = :email
+			      AND m.isDeleted = false
+			""")
+	Optional<MemberLoginDto> findLoginInfoDtoByEmail(@Param("email") Email email);
 
 	@Query("""
 			select m from Member m

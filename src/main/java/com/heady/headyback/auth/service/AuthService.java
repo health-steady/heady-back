@@ -18,7 +18,9 @@ import com.heady.headyback.auth.oauth.userInfo.OauthUserInfo;
 import com.heady.headyback.common.exception.CustomException;
 import com.heady.headyback.member.domain.Email;
 import com.heady.headyback.member.domain.Member;
+import com.heady.headyback.member.domain.Password;
 import com.heady.headyback.member.domain.enumerated.SocialProvider;
+import com.heady.headyback.member.dto.MemberLoginDto;
 import com.heady.headyback.member.repository.MemberRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -44,10 +46,11 @@ public class AuthService {
 	}
 
 	public AuthTokenDto login(LoginRequest request) {
-		Member member = memberRepository.findByEmail(Email.ofCreate(request.email()))
+		MemberLoginDto member = memberRepository.findLoginInfoDtoByEmail(
+						Email.ofCreate(request.email()))
 				.orElseThrow(() -> new CustomException(MEMBER_NOT_FOUND));
-		checkPassword(member, request.password());
-		return createAuthToken(member);
+		checkPassword(Password.of(member.password()), request.password());
+		return createAuthToken(member.publicId());
 	}
 
 	@Transactional(readOnly = true)
@@ -57,14 +60,14 @@ public class AuthService {
 		return Accessor.member(member.getPublicId());
 	}
 
-	private void checkPassword(Member member, String rowPassword) {
-		member.getPassword().matches(rowPassword);
+	private void checkPassword(Password password, String rowPassword) {
+		password.matches(rowPassword);
 	}
 
-	private AuthTokenDto createAuthToken(Member member) {
+	private AuthTokenDto createAuthToken(UUID publicId) {
 		return AuthTokenDto.of(
-				jwtProvider.createAccessToken(member),
-				jwtProvider.createRefreshToken(member)
+				jwtProvider.createAccessToken(publicId),
+				jwtProvider.createRefreshToken(publicId)
 		);
 	}
 
@@ -82,6 +85,6 @@ public class AuthService {
 						)
 				));
 
-		return createAuthToken(member);
+		return createAuthToken(member.getPublicId());
 	}
 }
