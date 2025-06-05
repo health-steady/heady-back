@@ -11,7 +11,7 @@ public record MealItemWithFoodDto(
 		return new MealItemWithFoodDto(
 				mealItem.getId(),
 				mealItem.getName(),
-				FoodDto.from(mealItem.getFood())
+				FoodDto.fromNullable(mealItem.getFood())
 		);
 	}
 }

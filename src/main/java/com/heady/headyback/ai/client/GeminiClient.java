@@ -41,13 +41,10 @@ public class GeminiClient {
 	 * 첫 번째 응답 파트를 텍스트로 반환합니다.
 	 */
 	public AiAnalysisDto generateContent(String prompt) {
-		// 1) contents
 		var content = new ContentRequest.Content(
 				List.of(new ContentRequest.Part(prompt))
 		);
 
-		// 2) generationConfig: 의료 리포트 JSON 스키마
-		// top-level OBJECT, 세 개의 프로퍼티(bloodSugarAnalysis, dietAnalysis, recommendedActionPlan)
 		Map<String, ContentRequest.PropertySchema> props = Map.of(
 				"bloodSugarAnalysis", new ContentRequest.PropertySchema.TypeOnly("STRING"),
 				"dietAnalysis",      new ContentRequest.PropertySchema.TypeOnly("STRING"),
@@ -59,8 +56,8 @@ public class GeminiClient {
 		);
 		ContentRequest.ResponseSchema responseSchema = new ContentRequest.ResponseSchema(
 				"OBJECT",
-				null,      // items
-				props,     // properties
+				null,
+				props,
 				List.of("bloodSugarAnalysis", "dietAnalysis", "recommendedActionPlan")
 		);
 		var generationConfig = new ContentRequest.GenerationConfig(
@@ -68,13 +65,11 @@ public class GeminiClient {
 				responseSchema
 		);
 
-		// 3) 요청 DTO 조립
 		var requestDto = new ContentRequest(
 				List.of(content),
 				generationConfig
 		);
 
-		// 4) DTO → JSON
 		String body;
 		try {
 			body = objectMapper.writeValueAsString(requestDto);
@@ -83,7 +78,6 @@ public class GeminiClient {
 			throw new RuntimeException("Gemini 요청 직렬화 실패", e);
 		}
 
-		// 5) WebClient 호출 (동기)
 		WebClient client = webClientBuilder
 				.baseUrl(BASE_URL)
 				.defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
@@ -112,7 +106,6 @@ public class GeminiClient {
 			throw new RuntimeException("Gemini API HTTP 오류", e);
 		}
 
-		// 6) 응답에서 첫 파트 텍스트 추출
 		if (response == null
 				|| response.candidates() == null
 				|| response.candidates().isEmpty()

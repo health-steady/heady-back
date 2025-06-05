@@ -34,4 +34,11 @@ public record FoodDto(
 				food.getSodium()
 		);
 	}
+
+	public static FoodDto fromNullable(Food food) {
+		if (food == null) {
+			return null;
+		}
+		return from(food);
+	}
 }
