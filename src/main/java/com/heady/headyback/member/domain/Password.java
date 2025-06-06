@@ -1,10 +1,11 @@
 package com.heady.headyback.member.domain;
 
+import static com.heady.headyback.member.constant.Argon2ConfigConstants.*;
 import static com.heady.headyback.member.exception.MemberExceptionCode.*;
 
 import java.util.regex.Pattern;
 
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.heady.headyback.common.exception.CustomException;
@@ -12,15 +13,27 @@ import com.heady.headyback.common.exception.CustomException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
+@Getter
 @Embeddable
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Password {
 
 	private static final Pattern PASSWORD_PATTERN =
 			Pattern.compile("^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d~`!@#$%^&*()_\\-+=]{6,}$");
-	private static final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
+	private static final PasswordEncoder passwordEncoder =
+			new Argon2PasswordEncoder(
+					SALT_LENGTH,
+					HASH_LENGTH,
+					PARALLELISM,
+					MEMORY,
+					ITERATIONS
+			);
 
 	@Column(name = "password")
 	private String value;
