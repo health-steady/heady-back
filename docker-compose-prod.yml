@@ -20,6 +20,9 @@ services:
       KAKAO_CLIENT_ID: ${KAKAO_CLIENT_ID}
       GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
       GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
+      JAVA_OPTS: "-Xms256m -Xmx256m -XX:+UseG1GC -XX:MaxGCPauseMillis=200"
+      command: >
+        java $JAVA_OPTS -jar /app.jar
     networks:
       - monitoring_net
 
