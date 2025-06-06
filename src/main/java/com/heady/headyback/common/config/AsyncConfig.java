@@ -11,6 +11,6 @@ public class AsyncConfig {
 
 	@Bean("argon2Executor")
 	public Executor argon2Executor() {
-		return Executors.newFixedThreadPool(2);
+		return Executors.newFixedThreadPool(4);
 	}
 }
