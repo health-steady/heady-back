@@ -22,7 +22,7 @@ services:
       GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
       JAVA_OPTS: "-Xms512m -Xmx1024m -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:InitiatingHeapOccupancyPercent=30"
       command: >
-        java $JAVA_OPTS -jar /app.jar
+        sh -c "java $JAVA_OPTS -jar /app.jar"
     networks:
       - monitoring_net
 
