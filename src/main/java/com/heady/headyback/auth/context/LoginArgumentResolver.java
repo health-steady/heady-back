@@ -36,10 +36,6 @@ public class LoginArgumentResolver implements HandlerMethodArgumentResolver {
 
 		HttpServletRequest request = (HttpServletRequest)webRequest.getNativeRequest();
 		UUID publicId = (UUID)request.getAttribute("publicId");
-
-		if (publicId == null) {
-			// TODO Guest 모드?
-		}
 		return authService.getAuthMember(publicId);
 	}
 }
