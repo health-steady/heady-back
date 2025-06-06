@@ -54,7 +54,6 @@ public class AuthService {
 				.orElseThrow(() -> new CustomException(MEMBER_NOT_FOUND));
 		return CompletableFuture.runAsync(() -> {
 					checkPassword(Password.of(member.password()), request.password());
-					log.debug("비동기 Argon2 비밀번호 검증 통과 (publicId={})", member.publicId());
 				}, argon2Executor)
 				.thenApplyAsync(ignored -> createAuthToken(member.publicId()));
 	}

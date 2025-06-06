@@ -12,7 +12,7 @@ public class AsyncConfig {
 	@Bean("argon2Executor")
 	public Executor argon2Executor() {
 		ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-		executor.setCorePoolSize(1);
+		executor.setCorePoolSize(2);
 		executor.setMaxPoolSize(2);
 		executor.setQueueCapacity(50);
 		executor.setThreadNamePrefix("argon2-");
