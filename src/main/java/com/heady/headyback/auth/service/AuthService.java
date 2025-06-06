@@ -3,6 +3,8 @@ package com.heady.headyback.auth.service;
 import static com.heady.headyback.member.exception.MemberExceptionCode.*;
 
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,6 +36,7 @@ public class AuthService {
 	private final OauthProviders oauthProviders;
 	private final MemberRepository memberRepository;
 	private final JwtProvider jwtProvider;
+	private final Executor argon2Executor;
 
 	public AuthTokenDto oauthLogin(OauthLoginRequest request) {
 		OauthProvider provider = oauthProviders.getProvider(request.socialProvider());
@@ -45,12 +48,15 @@ public class AuthService {
 		);
 	}
 
-	public AuthTokenDto login(LoginRequest request) {
+	public CompletableFuture<AuthTokenDto> login(LoginRequest request) {
 		MemberLoginDto member = memberRepository.findLoginInfoDtoByEmail(
 						Email.ofCreate(request.email()))
 				.orElseThrow(() -> new CustomException(MEMBER_NOT_FOUND));
-		checkPassword(Password.of(member.password()), request.password());
-		return createAuthToken(member.publicId());
+		return CompletableFuture.runAsync(() -> {
+					checkPassword(Password.of(member.password()), request.password());
+					log.debug("비동기 Argon2 비밀번호 검증 통과 (publicId={})", member.publicId());
+				}, argon2Executor)
+				.thenApplyAsync(ignored -> createAuthToken(member.publicId()));
 	}
 
 	@Transactional(readOnly = true)
