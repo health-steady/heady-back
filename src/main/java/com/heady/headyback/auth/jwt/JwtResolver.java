@@ -4,6 +4,8 @@ import static com.heady.headyback.auth.exception.AuthExceptionCode.*;
 
 import java.util.UUID;
 
+import javax.crypto.SecretKey;
+
 import org.springframework.stereotype.Component;
 
 import com.heady.headyback.common.exception.CustomException;
@@ -18,12 +20,13 @@ import lombok.RequiredArgsConstructor;
 @Component
 public class JwtResolver {
 
+	private final SecretKey secretKey;
 	private final JwtProperties jwtProperties;
 
 	public boolean validate(String token) {
 		try {
 			Jwts.parserBuilder()
-					.setSigningKey(jwtProperties.getSecretKey())
+					.setSigningKey(secretKey)
 					.build()
 					.parseClaimsJws(token);
 			return true;
@@ -40,7 +43,7 @@ public class JwtResolver {
 
 	private Claims parseClaims(String token) {
 		return Jwts.parserBuilder()
-				.setSigningKey(jwtProperties.getSecretKey())
+				.setSigningKey(secretKey)
 				.build()
 				.parseClaimsJws(token)
 				.getBody();

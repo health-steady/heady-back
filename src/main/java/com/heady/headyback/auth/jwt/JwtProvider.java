@@ -3,9 +3,9 @@ package com.heady.headyback.auth.jwt;
 import java.util.Date;
 import java.util.UUID;
 
-import org.springframework.stereotype.Component;
+import javax.crypto.SecretKey;
 
-import com.heady.headyback.member.domain.Member;
+import org.springframework.stereotype.Component;
 
 import io.jsonwebtoken.Jwts;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Component
 public class JwtProvider {
+	private final SecretKey secretKey;
 	private final JwtProperties jwtProperties;
 
 	public String createAccessToken(UUID publicId) {
@@ -34,7 +35,7 @@ public class JwtProvider {
 				.setIssuedAt(now)
 				.setExpiration(expiredDate)
 				.claim(JwtProperties.TOKEN_TYPE, tokenType.name())
-				.signWith(jwtProperties.getSecretKey())
+				.signWith(secretKey)
 				.compact();
 	}
 }
