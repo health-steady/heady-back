@@ -20,7 +20,7 @@ services:
       KAKAO_CLIENT_ID: ${KAKAO_CLIENT_ID}
       GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
       GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
-      JAVA_OPTS: "-Xms256m -Xmx256m -XX:+UseG1GC -XX:MaxGCPauseMillis=200"
+      JAVA_OPTS: "-Xms512m -Xmx1024m -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:InitiatingHeapOccupancyPercent=30"
       command: >
         java $JAVA_OPTS -jar /app.jar
     networks:
