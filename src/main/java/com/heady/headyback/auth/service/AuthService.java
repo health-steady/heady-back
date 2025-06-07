@@ -34,7 +34,6 @@ public class AuthService {
 	private final OauthProviders oauthProviders;
 	private final MemberRepository memberRepository;
 	private final JwtProvider jwtProvider;
-	// private final Executor bCryptExecutor;
 
 	public AuthTokenDto oauthLogin(OauthLoginRequest request) {
 		OauthProvider provider = oauthProviders.getProvider(request.socialProvider());
@@ -46,43 +45,13 @@ public class AuthService {
 		);
 	}
 
-	// public CompletableFuture<AuthTokenDto> login(LoginRequest request) {
-	// 	MemberLoginDto member = memberRepository.findLoginInfoDtoByEmail(
-	// 					Email.ofCreate(request.email()))
-	// 			.orElseThrow(() -> new CustomException(MEMBER_NOT_FOUND));
-	// 	// checkPassword(Password.of(member.password()), request.password());
-	// 	// return createAuthToken(member.publicId());
-	// 	return CompletableFuture.runAsync(() -> {
-	// 				checkPassword(Password.of(member.password()), request.password());
-	// 			}, bCryptExecutor)
-	// 			.thenApplyAsync(ignored -> createAuthToken(member.publicId()));
-	// }
-
+	@Transactional(readOnly = true)
 	public AuthTokenDto login(LoginRequest request) {
-		long startTotal = System.nanoTime();
-		long startJpa = System.nanoTime();
-
 		MemberLoginDto member = memberRepository.findLoginInfoDtoByEmail(
 						Email.ofCreate(request.email()))
 				.orElseThrow(() -> new CustomException(MEMBER_NOT_FOUND));
-
-		long endJpa = System.nanoTime();
-		log.info("JPA 조회 소요 시간: {} ms", (endJpa - startJpa) / 1_000_000);
-
-		long startPw = System.nanoTime();
 		checkPassword(Password.of(member.password()), request.password());
-		long endPw = System.nanoTime();
-		log.info("비밀번호 검증 소요 시간: {} ms", (endPw - startPw) / 1_000_000);
-
-		long startJwt = System.nanoTime();
-		AuthTokenDto token = createAuthToken(member.publicId());
-		long endJwt = System.nanoTime();
-		log.info("JWT 생성 소요 시간: {} ms", (endJwt - startJwt) / 1_000_000);
-
-		long endTotal = System.nanoTime();
-		log.info("전체 로그인 처리 시간: {} ms", (endTotal - startTotal) / 1_000_000);
-
-		return token;
+		return createAuthToken(member.publicId());
 	}
 
 	@Transactional(readOnly = true)

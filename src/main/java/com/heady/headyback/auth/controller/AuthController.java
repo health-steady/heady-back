@@ -27,7 +27,6 @@ public class AuthController {
 	private final AuthService authService;
 
 	@PostMapping("/login")
-	// public CompletableFuture<ResponseEntity<LoginResponse>> login(
 	public ResponseEntity<LoginResponse> login(
 			@RequestBody @Valid LoginRequest request
 	) {
@@ -35,10 +34,6 @@ public class AuthController {
 		return ResponseEntity.ok()
 				.header(HttpHeaders.SET_COOKIE, token.refreshToken())
 				.body(LoginResponse.of(token.accessToken()));
-		// return authService.login(request)
-		// 		.thenApply(tokenDto -> ResponseEntity.ok()
-		// 				.header(HttpHeaders.SET_COOKIE, tokenDto.refreshToken())
-		// 				.body(LoginResponse.of(tokenDto.accessToken())));
 	}
 
 	@PostMapping("/oauth")
