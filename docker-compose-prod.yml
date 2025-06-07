@@ -21,7 +21,7 @@ services:
       GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
       GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
     command: >
-      sh -c "java -Xms512m -Xmx1024m -XX:+UseG1GC -XX:MaxGCPauseMillis=80 -XX:InitiatingHeapOccupancyPercent=20 -jar /app.jar"
+      sh -c "java -Xms1024m -Xmx2048m -XX:+UseG1GC -XX:MaxGCPauseMillis=80 -XX:InitiatingHeapOccupancyPercent=20 -jar /app.jar"
     networks:
       - monitoring_net
 

@@ -48,17 +48,48 @@ public class AuthService {
 		);
 	}
 
+	// public CompletableFuture<AuthTokenDto> login(LoginRequest request) {
+	// 	MemberLoginDto member = memberRepository.findLoginInfoDtoByEmail(
+	// 					Email.ofCreate(request.email()))
+	// 			.orElseThrow(() -> new CustomException(MEMBER_NOT_FOUND));
+	// 	// checkPassword(Password.of(member.password()), request.password());
+	// 	// return createAuthToken(member.publicId());
+	// 	return CompletableFuture.runAsync(() -> {
+	// 				checkPassword(Password.of(member.password()), request.password());
+	// 			}, bCryptExecutor)
+	// 			.thenApplyAsync(ignored -> createAuthToken(member.publicId()));
+	// }
+
 	public CompletableFuture<AuthTokenDto> login(LoginRequest request) {
+		long startTotal = System.nanoTime();
+		long startJpa = System.nanoTime();
+
 		MemberLoginDto member = memberRepository.findLoginInfoDtoByEmail(
 						Email.ofCreate(request.email()))
 				.orElseThrow(() -> new CustomException(MEMBER_NOT_FOUND));
-		// checkPassword(Password.of(member.password()), request.password());
-		// return createAuthToken(member.publicId());
+
+		long endJpa = System.nanoTime();
+		log.info("JPA 조회 소요 시간: {} ms", (endJpa - startJpa) / 1_000_000);
+
 		return CompletableFuture.runAsync(() -> {
+					long startPw = System.nanoTime();
 					checkPassword(Password.of(member.password()), request.password());
+					long endPw = System.nanoTime();
+					log.info("비밀번호 검증 소요 시간: {} ms", (endPw - startPw) / 1_000_000);
 				}, bCryptExecutor)
-				.thenApplyAsync(ignored -> createAuthToken(member.publicId()));
+				.thenApplyAsync(ignored -> {
+					long startJwt = System.nanoTime();
+					AuthTokenDto token = createAuthToken(member.publicId());
+					long endJwt = System.nanoTime();
+					log.info("JWT 생성 소요 시간: {} ms", (endJwt - startJwt) / 1_000_000);
+
+					long endTotal = System.nanoTime();
+					log.info("전체 로그인 처리 시간: {} ms", (endTotal - startTotal) / 1_000_000);
+
+					return token;
+				});
 	}
+
 
 	@Transactional(readOnly = true)
 	public Accessor getAuthMember(UUID publicId) {

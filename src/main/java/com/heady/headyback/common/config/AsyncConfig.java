@@ -13,7 +13,7 @@ public class AsyncConfig {
 	public Executor bCryptExecutor() {
 		ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
 		executor.setCorePoolSize(2);
-		executor.setMaxPoolSize(3);
+		executor.setMaxPoolSize(2);
 		executor.setQueueCapacity(50);
 		executor.setThreadNamePrefix("bCrypt-");
 		executor.initialize();
