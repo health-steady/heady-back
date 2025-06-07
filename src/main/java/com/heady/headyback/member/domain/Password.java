@@ -37,7 +37,7 @@ public class Password {
 	// 		);
 
 	private static final PasswordEncoder passwordEncoder =
-			new BCryptPasswordEncoder(9);
+			new BCryptPasswordEncoder(8);
 
 	@Column(name = "password")
 	private String value;
