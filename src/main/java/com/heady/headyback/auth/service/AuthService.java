@@ -3,8 +3,6 @@ package com.heady.headyback.auth.service;
 import static com.heady.headyback.member.exception.MemberExceptionCode.*;
 
 import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Executor;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,7 +34,7 @@ public class AuthService {
 	private final OauthProviders oauthProviders;
 	private final MemberRepository memberRepository;
 	private final JwtProvider jwtProvider;
-	private final Executor bCryptExecutor;
+	// private final Executor bCryptExecutor;
 
 	public AuthTokenDto oauthLogin(OauthLoginRequest request) {
 		OauthProvider provider = oauthProviders.getProvider(request.socialProvider());
@@ -60,7 +58,7 @@ public class AuthService {
 	// 			.thenApplyAsync(ignored -> createAuthToken(member.publicId()));
 	// }
 
-	public CompletableFuture<AuthTokenDto> login(LoginRequest request) {
+	public AuthTokenDto login(LoginRequest request) {
 		long startTotal = System.nanoTime();
 		long startJpa = System.nanoTime();
 
@@ -71,25 +69,21 @@ public class AuthService {
 		long endJpa = System.nanoTime();
 		log.info("JPA 조회 소요 시간: {} ms", (endJpa - startJpa) / 1_000_000);
 
-		return CompletableFuture.runAsync(() -> {
-					long startPw = System.nanoTime();
-					checkPassword(Password.of(member.password()), request.password());
-					long endPw = System.nanoTime();
-					log.info("비밀번호 검증 소요 시간: {} ms", (endPw - startPw) / 1_000_000);
-				}, bCryptExecutor)
-				.thenApplyAsync(ignored -> {
-					long startJwt = System.nanoTime();
-					AuthTokenDto token = createAuthToken(member.publicId());
-					long endJwt = System.nanoTime();
-					log.info("JWT 생성 소요 시간: {} ms", (endJwt - startJwt) / 1_000_000);
+		long startPw = System.nanoTime();
+		checkPassword(Password.of(member.password()), request.password());
+		long endPw = System.nanoTime();
+		log.info("비밀번호 검증 소요 시간: {} ms", (endPw - startPw) / 1_000_000);
 
-					long endTotal = System.nanoTime();
-					log.info("전체 로그인 처리 시간: {} ms", (endTotal - startTotal) / 1_000_000);
+		long startJwt = System.nanoTime();
+		AuthTokenDto token = createAuthToken(member.publicId());
+		long endJwt = System.nanoTime();
+		log.info("JWT 생성 소요 시간: {} ms", (endJwt - startJwt) / 1_000_000);
 
-					return token;
-				});
+		long endTotal = System.nanoTime();
+		log.info("전체 로그인 처리 시간: {} ms", (endTotal - startTotal) / 1_000_000);
+
+		return token;
 	}
-
 
 	@Transactional(readOnly = true)
 	public Accessor getAuthMember(UUID publicId) {
