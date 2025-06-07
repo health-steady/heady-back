@@ -1,7 +1,6 @@
 package com.heady.headyback.auth.jwt;
 
 import java.nio.charset.StandardCharsets;
-import java.util.Base64;
 
 import javax.crypto.SecretKey;
 

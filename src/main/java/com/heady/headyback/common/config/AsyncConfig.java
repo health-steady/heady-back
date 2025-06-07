@@ -9,14 +9,14 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 @Configuration
 public class AsyncConfig {
 
-	@Bean("argon2Executor")
-	public Executor argon2Executor() {
-		ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-		executor.setCorePoolSize(2);
-		executor.setMaxPoolSize(3);
-		executor.setQueueCapacity(50);
-		executor.setThreadNamePrefix("argon2-");
-		executor.initialize();
-		return executor;
-	}
+	// @Bean("argon2Executor")
+	// public Executor argon2Executor() {
+	// 	ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+	// 	executor.setCorePoolSize(2);
+	// 	executor.setMaxPoolSize(3);
+	// 	executor.setQueueCapacity(50);
+	// 	executor.setThreadNamePrefix("argon2-");
+	// 	executor.initialize();
+	// 	return executor;
+	// }
 }

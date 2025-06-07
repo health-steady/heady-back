@@ -6,6 +6,7 @@ import static com.heady.headyback.member.exception.MemberExceptionCode.*;
 import java.util.regex.Pattern;
 
 import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.heady.headyback.common.exception.CustomException;
@@ -26,14 +27,17 @@ public class Password {
 	private static final Pattern PASSWORD_PATTERN =
 			Pattern.compile("^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d~`!@#$%^&*()_\\-+=]{6,}$");
 
+	// private static final PasswordEncoder passwordEncoder =
+	// 		new Argon2PasswordEncoder(
+	// 				SALT_LENGTH,
+	// 				HASH_LENGTH,
+	// 				PARALLELISM,
+	// 				MEMORY,
+	// 				ITERATIONS
+	// 		);
+
 	private static final PasswordEncoder passwordEncoder =
-			new Argon2PasswordEncoder(
-					SALT_LENGTH,
-					HASH_LENGTH,
-					PARALLELISM,
-					MEMORY,
-					ITERATIONS
-			);
+			new BCryptPasswordEncoder(10);
 
 	@Column(name = "password")
 	private String value;

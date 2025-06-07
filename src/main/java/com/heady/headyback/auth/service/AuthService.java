@@ -36,7 +36,7 @@ public class AuthService {
 	private final OauthProviders oauthProviders;
 	private final MemberRepository memberRepository;
 	private final JwtProvider jwtProvider;
-	private final Executor argon2Executor;
+	// private final Executor argon2Executor;
 
 	public AuthTokenDto oauthLogin(OauthLoginRequest request) {
 		OauthProvider provider = oauthProviders.getProvider(request.socialProvider());
@@ -48,14 +48,16 @@ public class AuthService {
 		);
 	}
 
-	public CompletableFuture<AuthTokenDto> login(LoginRequest request) {
+	public AuthTokenDto login(LoginRequest request) {
 		MemberLoginDto member = memberRepository.findLoginInfoDtoByEmail(
 						Email.ofCreate(request.email()))
 				.orElseThrow(() -> new CustomException(MEMBER_NOT_FOUND));
-		return CompletableFuture.runAsync(() -> {
-					checkPassword(Password.of(member.password()), request.password());
-				}, argon2Executor)
-				.thenApplyAsync(ignored -> createAuthToken(member.publicId()));
+		checkPassword(Password.of(member.password()), request.password());
+		return createAuthToken(member.publicId());
+		// return CompletableFuture.runAsync(() -> {
+		// 			checkPassword(Password.of(member.password()), request.password());
+		// 		}, argon2Executor)
+		// 		.thenApplyAsync(ignored -> createAuthToken(member.publicId()));
 	}
 
 	@Transactional(readOnly = true)
