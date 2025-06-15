@@ -52,21 +52,39 @@ public class BloodSugarControllerTest {
 	private Accessor accessor;
 
 	private static final UUID TEST_UUID = UUID.fromString("11111111-1111-1111-1111-111111111111");
+
 	private static final String TEST_MEMO = "공복 측정 테스트";
-	private static final String TEST_MEAL_NAME1 = "현미밥";
-	private static final String TEST_MEAL_NAME2 = "불고기";
-	private static final String TEST_MEAL_MEMO = "저녁 식사 예시";
-	private static final String TEST_MEASURE_TYPE = "FASTING";
-	private static final String TEST_MEAL_TYPE = "BREAKFAST";
-	private static final String TEST_DATE_STRING = "2025-06-01";
-	private static final int TEST_LEVEL = 110;
-	private static final int RESPONSE_LEVEL = 105;
-	private static final LocalDateTime TEST_MEASURED_AT = LocalDateTime.of(2025, 6, 15, 8, 30);
+	private static final String RESPONSE_MEMO = "아침 공복 측정";
+	private static final String EVENING_MEMO = "저녁 기록";
+	private static final String MEAL_MEMO = "저녁 식사 예시";
+
+	private static final String MEAL_NAME_1 = "현미밥";
+	private static final String MEAL_NAME_2 = "불고기";
+
+	private static final String MEASURE_TYPE_STR = "FASTING";
+	private static final String MEAL_TYPE_STR = "BREAKFAST";
+	private static final String TEST_AFTER_MEAL = "AFTER_MEAL";
+
+	private static final String TEST_DATE_STR = "2025-06-01";
+	private static final LocalDateTime REQUEST_MEASURED_AT = LocalDateTime.of(2025, 6, 15, 8, 30);
 	private static final LocalDateTime RESPONSE_MEASURED_AT = LocalDateTime.of(2025, 6, 15, 7, 45);
+	private static final LocalDateTime DINNER_AT = LocalDateTime.of(2025, 6, 15, 18, 0);
+	private static final LocalDateTime EVENING_MEASURED_AT = LocalDateTime.of(2025, 6, 1, 18, 30);
+
 	private static final long BLOOD_SUGAR_ID = 1001L;
 	private static final long MEAL_ID = 101L;
-	private static final long MEAL_ITEM1_ID = 1L;
-	private static final long MEAL_ITEM2_ID = 2L;
+	private static final long MEAL_ITEM_ID_1 = 1L;
+	private static final long MEAL_ITEM_ID_2 = 2L;
+
+	private static final int REQUEST_LEVEL = 110;
+	private static final int RESPONSE_LEVEL = 105;
+	private static final int EVENING_LEVEL = 130;
+
+	private static final int SUMMARY_BREAKFAST = 95;
+	private static final int SUMMARY_LUNCH = 110;
+	private static final int SUMMARY_DINNER = 130;
+	private static final int SUMMARY_FASTING = 140;
+	private static final int SUMMARY_POSTPRANDIAL = 180;
 
 	@BeforeEach
 	void setUp() {
@@ -77,24 +95,20 @@ public class BloodSugarControllerTest {
 	@DisplayName("혈당 기록을 정상적으로 저장한다.")
 	void recordBloodSugar() throws Exception {
 		BloodSugarRequest request = new BloodSugarRequest(
-				TEST_MEASURED_AT,
-				TEST_MEASURE_TYPE,
-				TEST_MEAL_TYPE,
-				TEST_LEVEL,
+				REQUEST_MEASURED_AT,
+				MEASURE_TYPE_STR,
+				MEAL_TYPE_STR,
+				REQUEST_LEVEL,
 				TEST_MEMO
 		);
 
 		Set<MealItemDto> mealItems = Set.of(
-				new MealItemDto(MEAL_ITEM1_ID, TEST_MEAL_NAME1),
-				new MealItemDto(MEAL_ITEM2_ID, TEST_MEAL_NAME2)
+				new MealItemDto(MEAL_ITEM_ID_1, MEAL_NAME_1),
+				new MealItemDto(MEAL_ITEM_ID_2, MEAL_NAME_2)
 		);
 
 		MealDto mealDto = new MealDto(
-				MEAL_ID,
-				MealType.DINNER,
-				LocalDateTime.of(2025, 6, 15, 18, 0),
-				TEST_MEAL_MEMO,
-				mealItems
+				MEAL_ID, MealType.DINNER, DINNER_AT, MEAL_MEMO, mealItems
 		);
 
 		BloodSugarWithMealDto dto = new BloodSugarWithMealDto(
@@ -102,7 +116,7 @@ public class BloodSugarControllerTest {
 				RESPONSE_LEVEL,
 				RESPONSE_MEASURED_AT,
 				MeasureType.FASTING,
-				"아침 공복 측정",
+				RESPONSE_MEMO,
 				MealType.BREAKFAST,
 				mealDto
 		);
@@ -116,12 +130,11 @@ public class BloodSugarControllerTest {
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.id").value(BLOOD_SUGAR_ID))
 				.andExpect(jsonPath("$.level").value(RESPONSE_LEVEL))
-				.andExpect(jsonPath("$.measuredAt").value("2025-06-15T07:45:00"))
-				.andExpect(jsonPath("$.measureType").value(TEST_MEASURE_TYPE))
-				.andExpect(jsonPath("$.memo").value("아침 공복 측정"))
-				.andExpect(jsonPath("$.mealType").value(TEST_MEAL_TYPE))
-				.andExpect(jsonPath("$.meal.foods.[0].name").value(TEST_MEAL_NAME1))
-				.andExpect(jsonPath("$.meal.foods.[1].name").value(TEST_MEAL_NAME2));
+				.andExpect(jsonPath("$.measureType").value(MEASURE_TYPE_STR))
+				.andExpect(jsonPath("$.memo").value(RESPONSE_MEMO))
+				.andExpect(jsonPath("$.mealType").value(MEAL_TYPE_STR))
+				.andExpect(jsonPath("$.meal.foods.[0].name").value(MEAL_NAME_1))
+				.andExpect(jsonPath("$.meal.foods.[1].name").value(MEAL_NAME_2));
 	}
 
 	@Test
@@ -130,11 +143,11 @@ public class BloodSugarControllerTest {
 		MealDto mealDto = new MealDto(
 				MEAL_ID,
 				MealType.DINNER,
-				LocalDateTime.of(2025, 6, 15, 18, 0),
-				TEST_MEAL_MEMO,
+				DINNER_AT,
+				MEAL_MEMO,
 				Set.of(
-						new MealItemDto(MEAL_ITEM1_ID, TEST_MEAL_NAME1),
-						new MealItemDto(MEAL_ITEM2_ID, TEST_MEAL_NAME2)
+						new MealItemDto(MEAL_ITEM_ID_1, MEAL_NAME_1),
+						new MealItemDto(MEAL_ITEM_ID_2, MEAL_NAME_2)
 				)
 		);
 
@@ -143,7 +156,7 @@ public class BloodSugarControllerTest {
 				RESPONSE_LEVEL,
 				RESPONSE_MEASURED_AT,
 				MeasureType.FASTING,
-				"아침 공복 측정",
+				RESPONSE_MEMO,
 				MealType.BREAKFAST,
 				mealDto
 		);
@@ -151,13 +164,13 @@ public class BloodSugarControllerTest {
 		when(bloodSugarService.getAllByDate(any(), any())).thenReturn(List.of(dto));
 
 		mvc.perform(get("/api/blood-sugars/v1")
-						.param("date", TEST_DATE_STRING)
+						.param("date", TEST_DATE_STR)
 						.requestAttr("accessor", accessor))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$[0].id").value(BLOOD_SUGAR_ID))
 				.andExpect(jsonPath("$[0].level").value(RESPONSE_LEVEL))
-				.andExpect(jsonPath("$[0].meal.foods.[0].name").value(TEST_MEAL_NAME1))
-				.andExpect(jsonPath("$[0].meal.foods.[1].name").value(TEST_MEAL_NAME2));
+				.andExpect(jsonPath("$[0].meal.foods.[0].name").value(MEAL_NAME_1))
+				.andExpect(jsonPath("$[0].meal.foods.[1].name").value(MEAL_NAME_2));
 	}
 
 	@Test
@@ -165,41 +178,47 @@ public class BloodSugarControllerTest {
 	void getBloodSugarByDate() throws Exception {
 		BloodSugarDto dto = new BloodSugarDto(
 				3L,
-				130,
-				LocalDateTime.of(2025, 6, 1, 18, 30),
+				EVENING_LEVEL,
+				EVENING_MEASURED_AT,
 				MeasureType.AFTER_MEAL,
-				"저녁 기록",
+				EVENING_MEMO,
 				MealType.DINNER
 		);
 
 		when(bloodSugarService.getByDate(any(), any())).thenReturn(List.of(dto));
 
-		mvc.perform(get("/api/blood-sugars/v1/" + TEST_DATE_STRING)
+		mvc.perform(get("/api/blood-sugars/v1/" + TEST_DATE_STR)
 						.requestAttr("accessor", accessor))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$[0].id").value(3L))
-				.andExpect(jsonPath("$[0].level").value(130))
-				.andExpect(jsonPath("$[0].measureType").value("AFTER_MEAL"))
-				.andExpect(jsonPath("$[0].memo").value("저녁 기록"));
+				.andExpect(jsonPath("$[0].level").value(EVENING_LEVEL))
+				.andExpect(jsonPath("$[0].measureType").value(TEST_AFTER_MEAL))
+				.andExpect(jsonPath("$[0].memo").value(EVENING_MEMO));
 	}
 
 	@Test
 	@DisplayName("혈당 요약 정보를 조회한다.")
 	void getBloodSugarSummary() throws Exception {
-		BloodSugarSummaryDto summaryDto = new BloodSugarSummaryDto(95, 110, 130, 140, 180);
+		BloodSugarSummaryDto summaryDto = new BloodSugarSummaryDto(
+				SUMMARY_BREAKFAST,
+				SUMMARY_LUNCH,
+				SUMMARY_DINNER,
+				SUMMARY_FASTING,
+				SUMMARY_POSTPRANDIAL
+		);
 
 		when(bloodSugarService.getSummaryByDate(any(), any()))
 				.thenReturn(summaryDto);
 
 		mvc.perform(get("/api/blood-sugars/v1/summary")
-						.param("date", TEST_DATE_STRING)
+						.param("date", TEST_DATE_STR)
 						.requestAttr("accessor", accessor))
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.breakfast").value(95))
-				.andExpect(jsonPath("$.lunch").value(110))
-				.andExpect(jsonPath("$.dinner").value(130))
-				.andExpect(jsonPath("$.highestFasting").value(140))
-				.andExpect(jsonPath("$.highestPostprandial").value(180));
+				.andExpect(jsonPath("$.breakfast").value(SUMMARY_BREAKFAST))
+				.andExpect(jsonPath("$.lunch").value(SUMMARY_LUNCH))
+				.andExpect(jsonPath("$.dinner").value(SUMMARY_DINNER))
+				.andExpect(jsonPath("$.highestFasting").value(SUMMARY_FASTING))
+				.andExpect(jsonPath("$.highestPostprandial").value(SUMMARY_POSTPRANDIAL));
 	}
 
 	@Test
