@@ -35,56 +35,72 @@ import com.heady.headyback.meal.dto.MealDto;
 import com.heady.headyback.meal.dto.MealItemDto;
 
 @WebMvcTest(BloodSugarController.class)
-public class BloodControllerTest {
+public class BloodSugarControllerTest {
 
 	@Autowired
 	private MockMvc mvc;
-
 	@Autowired
 	private ObjectMapper objectMapper;
 
 	@MockitoBean
 	private AuthService authService;
-
 	@MockitoBean
 	private JwtResolver jwtResolver;
-
 	@MockitoBean
 	private BloodSugarService bloodSugarService;
 
 	private Accessor accessor;
 
+	private static final UUID TEST_UUID = UUID.fromString("11111111-1111-1111-1111-111111111111");
+	private static final String TEST_MEMO = "공복 측정 테스트";
+	private static final String TEST_MEAL_NAME1 = "현미밥";
+	private static final String TEST_MEAL_NAME2 = "불고기";
+	private static final String TEST_MEAL_MEMO = "저녁 식사 예시";
+	private static final String TEST_MEASURE_TYPE = "FASTING";
+	private static final String TEST_MEAL_TYPE = "BREAKFAST";
+	private static final String TEST_DATE_STRING = "2025-06-01";
+	private static final int TEST_LEVEL = 110;
+	private static final int RESPONSE_LEVEL = 105;
+	private static final LocalDateTime TEST_MEASURED_AT = LocalDateTime.of(2025, 6, 15, 8, 30);
+	private static final LocalDateTime RESPONSE_MEASURED_AT = LocalDateTime.of(2025, 6, 15, 7, 45);
+	private static final long BLOOD_SUGAR_ID = 1001L;
+	private static final long MEAL_ID = 101L;
+	private static final long MEAL_ITEM1_ID = 1L;
+	private static final long MEAL_ITEM2_ID = 2L;
+
 	@BeforeEach
 	void setUp() {
-		accessor = new Accessor(UUID.randomUUID(), Authority.MEMBER);
+		accessor = new Accessor(TEST_UUID, Authority.MEMBER);
 	}
 
 	@Test
 	@DisplayName("혈당 기록을 정상적으로 저장한다.")
 	void recordBloodSugar() throws Exception {
 		BloodSugarRequest request = new BloodSugarRequest(
-				LocalDateTime.of(2025, 6, 15, 8, 30),
-				"FASTING",
-				"BREAKFAST",
-				110,
-				"공복 측정 테스트"
+				TEST_MEASURED_AT,
+				TEST_MEASURE_TYPE,
+				TEST_MEAL_TYPE,
+				TEST_LEVEL,
+				TEST_MEMO
 		);
 
-		MealItemDto item1 = new MealItemDto(1L, "현미밥");
-		MealItemDto item2 = new MealItemDto(2L, "불고기");
+		Set<MealItemDto> mealItems = Set.of(
+				new MealItemDto(MEAL_ITEM1_ID, TEST_MEAL_NAME1),
+				new MealItemDto(MEAL_ITEM2_ID, TEST_MEAL_NAME2)
+		);
 
 		MealDto mealDto = new MealDto(
-				101L,
+				MEAL_ID,
 				MealType.DINNER,
 				LocalDateTime.of(2025, 6, 15, 18, 0),
-				"저녁 식사 예시",
-				Set.of(item1, item2)
+				TEST_MEAL_MEMO,
+				mealItems
 		);
 
 		BloodSugarWithMealDto dto = new BloodSugarWithMealDto(
-				1001L,
-				105,
-				LocalDateTime.of(2025, 6, 15, 7, 45),
+				BLOOD_SUGAR_ID,
+				RESPONSE_LEVEL,
+				RESPONSE_MEASURED_AT,
 				MeasureType.FASTING,
 				"아침 공복 측정",
 				MealType.BREAKFAST,
@@ -98,34 +114,34 @@ public class BloodControllerTest {
 						.content(objectMapper.writeValueAsString(request))
 						.requestAttr("accessor", accessor))
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.id").value(1001L))
-				.andExpect(jsonPath("$.level").value(105))
+				.andExpect(jsonPath("$.id").value(BLOOD_SUGAR_ID))
+				.andExpect(jsonPath("$.level").value(RESPONSE_LEVEL))
 				.andExpect(jsonPath("$.measuredAt").value("2025-06-15T07:45:00"))
-				.andExpect(jsonPath("$.measureType").value("FASTING"))
+				.andExpect(jsonPath("$.measureType").value(TEST_MEASURE_TYPE))
 				.andExpect(jsonPath("$.memo").value("아침 공복 측정"))
-				.andExpect(jsonPath("$.mealType").value("BREAKFAST"))
-				.andExpect(jsonPath("$.meal.foods.[0].name").value("현미밥"))
-				.andExpect(jsonPath("$.meal.foods.[1].name").value("불고기"));
+				.andExpect(jsonPath("$.mealType").value(TEST_MEAL_TYPE))
+				.andExpect(jsonPath("$.meal.foods.[0].name").value(TEST_MEAL_NAME1))
+				.andExpect(jsonPath("$.meal.foods.[1].name").value(TEST_MEAL_NAME2));
 	}
 
 	@Test
 	@DisplayName("특정 날짜의 모든 혈당 기록을 조회한다.")
 	void getAllBloodSugarsByDate() throws Exception {
-		MealItemDto item1 = new MealItemDto(1L, "현미밥");
-		MealItemDto item2 = new MealItemDto(2L, "불고기");
-
 		MealDto mealDto = new MealDto(
-				101L,
+				MEAL_ID,
 				MealType.DINNER,
 				LocalDateTime.of(2025, 6, 15, 18, 0),
-				"저녁 식사 예시",
-				Set.of(item1, item2)
+				TEST_MEAL_MEMO,
+				Set.of(
+						new MealItemDto(MEAL_ITEM1_ID, TEST_MEAL_NAME1),
+						new MealItemDto(MEAL_ITEM2_ID, TEST_MEAL_NAME2)
+				)
 		);
 
 		BloodSugarWithMealDto dto = new BloodSugarWithMealDto(
-				1001L,
-				105,
-				LocalDateTime.of(2025, 6, 15, 7, 45),
+				BLOOD_SUGAR_ID,
+				RESPONSE_LEVEL,
+				RESPONSE_MEASURED_AT,
 				MeasureType.FASTING,
 				"아침 공복 측정",
 				MealType.BREAKFAST,
@@ -135,13 +151,13 @@ public class BloodControllerTest {
 		when(bloodSugarService.getAllByDate(any(), any())).thenReturn(List.of(dto));
 
 		mvc.perform(get("/api/blood-sugars/v1")
-						.param("date", "2025-06-01")
+						.param("date", TEST_DATE_STRING)
 						.requestAttr("accessor", accessor))
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("$[0].id").value(1001L))
-				.andExpect(jsonPath("$[0].level").value(105))
-				.andExpect(jsonPath("$[0].meal.foods.[0].name").value("현미밥"))
-				.andExpect(jsonPath("$[0].meal.foods.[1].name").value("불고기"));
+				.andExpect(jsonPath("$[0].id").value(BLOOD_SUGAR_ID))
+				.andExpect(jsonPath("$[0].level").value(RESPONSE_LEVEL))
+				.andExpect(jsonPath("$[0].meal.foods.[0].name").value(TEST_MEAL_NAME1))
+				.andExpect(jsonPath("$[0].meal.foods.[1].name").value(TEST_MEAL_NAME2));
 	}
 
 	@Test
@@ -158,7 +174,7 @@ public class BloodControllerTest {
 
 		when(bloodSugarService.getByDate(any(), any())).thenReturn(List.of(dto));
 
-		mvc.perform(get("/api/blood-sugars/v1/2025-06-01")
+		mvc.perform(get("/api/blood-sugars/v1/" + TEST_DATE_STRING)
 						.requestAttr("accessor", accessor))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$[0].id").value(3L))
@@ -170,19 +186,14 @@ public class BloodControllerTest {
 	@Test
 	@DisplayName("혈당 요약 정보를 조회한다.")
 	void getBloodSugarSummary() throws Exception {
-		// given
-		BloodSugarSummaryDto summaryDto = new BloodSugarSummaryDto(
-				95, 110, 130, 140, 180
-		);
+		BloodSugarSummaryDto summaryDto = new BloodSugarSummaryDto(95, 110, 130, 140, 180);
 
 		when(bloodSugarService.getSummaryByDate(any(), any()))
 				.thenReturn(summaryDto);
 
-		// when & then
 		mvc.perform(get("/api/blood-sugars/v1/summary")
-						.param("date", "2025-06-01")
-						.requestAttr("accessor", accessor)
-						.accept(MediaType.APPLICATION_JSON))
+						.param("date", TEST_DATE_STRING)
+						.requestAttr("accessor", accessor))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.breakfast").value(95))
 				.andExpect(jsonPath("$.lunch").value(110))
@@ -196,7 +207,7 @@ public class BloodControllerTest {
 	void deleteBloodSugar() throws Exception {
 		doNothing().when(bloodSugarService).delete(any(), any());
 
-		mvc.perform(delete("/api/blood-sugars/v1/{id}", 1L)
+		mvc.perform(delete("/api/blood-sugars/v1/{id}", BLOOD_SUGAR_ID)
 						.requestAttr("accessor", accessor))
 				.andExpect(status().isNoContent());
 	}

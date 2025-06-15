@@ -31,12 +31,15 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Table(name = "members")
 @Entity
 @Getter
 @EntityListeners(AuditingEntityListener.class)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member {
 
 	@Id
@@ -189,5 +192,9 @@ public class Member {
 		if (this.publicId == null) {
 			this.publicId = UUID.randomUUID();
 		}
+	}
+
+	public void setPublicIdForTest(UUID uuid) {
+		this.publicId = uuid;
 	}
 }

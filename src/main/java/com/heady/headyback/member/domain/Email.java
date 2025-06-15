@@ -8,10 +8,13 @@ import com.heady.headyback.common.exception.CustomException;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-@Embeddable
 @Getter
+@Embeddable
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Email {
 
 	private static final Pattern EMAIL_PATTERN =
