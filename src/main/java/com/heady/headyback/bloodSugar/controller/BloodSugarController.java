@@ -19,6 +19,7 @@ import com.heady.headyback.auth.annotation.Auth;
 import com.heady.headyback.auth.domain.Accessor;
 import com.heady.headyback.bloodSugar.dto.request.BloodSugarRequest;
 import com.heady.headyback.bloodSugar.dto.response.BloodSugarResponse;
+import com.heady.headyback.bloodSugar.dto.response.BloodSugarSummaryResponse;
 import com.heady.headyback.bloodSugar.dto.response.BloodSugarWithMealResponse;
 import com.heady.headyback.bloodSugar.service.BloodSugarService;
 
@@ -74,13 +75,15 @@ public class BloodSugarController {
 	}
 
 	@GetMapping("/summary")
-	public ResponseEntity<?> getSummaryByDate(
+	public ResponseEntity<BloodSugarSummaryResponse> getSummaryByDate(
 			@Auth Accessor accessor,
 			@RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date
 	) {
 
 		return ResponseEntity.ok().body(
-				bloodSugarService.getSummaryByDate(accessor, date)
+				BloodSugarSummaryResponse.of(
+						bloodSugarService.getSummaryByDate(accessor, date)
+				)
 		);
 	}
 
